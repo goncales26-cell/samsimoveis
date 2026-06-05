@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -361,7 +360,7 @@
                 <div>
                     <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Podcast "59 Minutos"</h4>
                     <div id="podcast-container">
-                        <p>Carregando episódios...</p>
+                        <p>Carregando episodes...</p>
                     </div>
                 </div>
                 <div>
@@ -393,166 +392,155 @@
     </footer>
 
     <script>
+        // Links das Abas publicadas na Web (.csv) limpos e validados sem single=true
         const LINKS_SHEETS = {
             imoveis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1582713778&output=csv',
             vagas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv'
         };
 
-        // Parser CSV robusto: suporta campos com vírgulas dentro de aspas duplas
-        function parsearLinhaCsv(linha) {
-            const campos = [];
-            let atual = '';
-            let dentroAspas = false;
+        // Função de parseamento avançada caractere por caractere (Respeita aspas e delimitadores regionais)
+        function parsearLinhaCsv(linha, separador) {
+            const resultado = [];
+            let campoAtual = '';
+            let dentroDeAspas = false;
 
             for (let i = 0; i < linha.length; i++) {
-                const char = linha[i];
-                if (char === '"') {
-                    // Aspas duplas escapadas ("") dentro de um campo
-                    if (dentroAspas && linha[i + 1] === '"') {
-                        atual += '"';
-                        i++;
-                    } else {
-                        dentroAspas = !dentroAspas;
-                    }
-                } else if (char === ',' && !dentroAspas) {
-                    campos.push(atual.trim().replace(/\r/g, ''));
-                    atual = '';
+                const caractere = linha[i];
+
+                if (caractere === '"') {
+                    dentroDeAspas = !dentroDeAspas; // Chaveia o estado de aspas
+                } else if (caractere === separador && !dentroDeAspas) {
+                    resultado.push(campoAtual.trim());
+                    campoAtual = '';
                 } else {
-                    atual += char;
+                    campoAtual += caractere;
                 }
             }
-            campos.push(atual.trim().replace(/\r/g, ''));
-            return campos;
+            resultado.push(campoAtual.trim());
+            return resultado;
         }
 
+        // Converter CSV para JSON estruturado usando o novo parser robusto
         function converterCsvParaJson(textoCsv) {
             const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
-
-            const cabecalhos = parsearLinhaCsv(linhas[0]).map(c => c.toLowerCase());
-
+            
+            // Auto-detecta separador regional (vírgula ou ponto e vírgula)
+            const separador = linhas[0].includes(';') ? ';' : ',';
+            
+            // Trata os cabeçalhos da primeira linha
+            const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().replace('\r', ''));
+            
             return linhas.slice(1).map(linha => {
-                const valores = parsearLinhaCsv(linha);
+                const valores = parsearLinhaCsv(linha, separador);
                 const objeto = {};
                 cabecalhos.forEach((cabecalho, i) => {
-                    objeto[cabecalho] = valores[i] !== undefined ? valores[i] : '';
+                    objeto[cabecalho] = valores[i] ? valores[i].replace('\r', '') : '';
                 });
                 return objeto;
             });
         }
 
-        // ✅ CORREÇÃO 3: Comparação de status é case-insensitive e ignora acentos
-        function statusDisponivel(status) {
-            if (!status) return false;
-            const s = status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            return s === 'disponivel';
-        }
-
-        // Módulo Imobiliário
+        // Módulo Imobiliário Dinâmico
         async function carregarModuloImoveis() {
-            const container = document.getElementById('vitrine-container');
             try {
                 const resposta = await fetch(LINKS_SHEETS.imoveis);
                 const textoCsv = await resposta.text();
                 const listaImoveis = converterCsvParaJson(textoCsv);
-
+                
+                const container = document.getElementById('vitrine-container');
                 if (!container) return;
-                container.innerHTML = '';
+                container.innerHTML = ''; 
 
-                const disponiveis = listaImoveis.filter(imovel => statusDisponivel(imovel.status));
+                listaImoveis.forEach(imovel => {
+                    if(imovel.status && imovel.status.toLowerCase() === 'disponivel') {
+                        
+                        let urlVideoDefinitiva = imovel.video_url;
+                        if (!urlVideoDefinitiva.startsWith('http')) {
+                            urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
+                        }
 
-                if (disponiveis.length === 0) {
-                    container.innerHTML = '<p>Nenhum imóvel disponível no momento.</p>';
-                    return;
-                }
-
-                disponiveis.forEach(imovel => {
-                    let urlVideoDefinitiva = imovel.video_url;
-                    if (urlVideoDefinitiva && !urlVideoDefinitiva.startsWith('http')) {
-                        urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${urlVideoDefinitiva}`;
+                        container.innerHTML += `
+                            <div class="card-imovel">
+                                <div class="video-wrapper">
+                                    <video controls preload="metadata">
+                                        <source src="${urlVideoDefinitiva}" type="video/mp4">
+                                        Seu navegador não suporta vídeos.
+                                    </video>
+                                </div>
+                                <div class="card-body">
+                                    <h4>${imovel.titulo}</h4>
+                                    <p class="card-meta"><strong>Tipo:</strong> ${imovel.tipo} | <strong>Metragem:</strong> ${imovel.metragem}</p>
+                                    <div class="card-price">${imovel.preco}</div>
+                                    <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px;">${imovel.descricao}</p>
+                                    <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Gostaria+de+mais+informações+sobre+o+imóvel+ID+${imovel.id}+(${imovel.titulo})" class="btn-whatsapp" target="_blank">Tenho Interesse</a>
+                                </div>
+                            </div>
+                        `;
                     }
-
-                    container.innerHTML += `
-                        <div class="card-imovel">
-                            <div class="video-wrapper">
-                                <video controls preload="metadata">
-                                    <source src="${urlVideoDefinitiva || ''}" type="video/mp4">
-                                    Seu navegador não suporta vídeos.
-                                </video>
-                            </div>
-                            <div class="card-body">
-                                <h4>${imovel.titulo}</h4>
-                                <p class="card-meta"><strong>Tipo:</strong> ${imovel.tipo} | <strong>Metragem:</strong> ${imovel.metragem}</p>
-                                <div class="card-price">${imovel.preco}</div>
-                                <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px;">${imovel.descricao}</p>
-                                <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Gostaria+de+mais+informações+sobre+o+imóvel+ID+${imovel.id}+(${imovel.titulo})" class="btn-whatsapp" target="_blank">Tenho Interesse</a>
-                            </div>
-                        </div>
-                    `;
                 });
             } catch (erro) {
                 console.error("Erro na carga de Imóveis:", erro);
-                if (container) container.innerHTML = '<p>Erro ao carregar imóveis. Tente novamente.</p>';
             }
         }
 
         // Módulo do Balcão de Empregos
         async function carregarModuloVagas() {
-            const container = document.getElementById('vagas-container');
             try {
                 const resposta = await fetch(LINKS_SHEETS.vagas);
                 const textoCsv = await resposta.text();
                 const listaVagas = converterCsvParaJson(textoCsv);
-
+                
+                const container = document.getElementById('vagas-container');
                 if (!container) return;
                 container.innerHTML = '';
 
-                const abertas = listaVagas.filter(v => v.status && v.status.toLowerCase().trim() === 'aberta');
-
-                if (abertas.length === 0) {
+                if(listaVagas.length === 0) {
                     container.innerHTML = '<p>Nenhuma vaga disponível no momento.</p>';
                     return;
                 }
 
-                abertas.forEach(vaga => {
-                    const linkContato = vaga.contato_envio && vaga.contato_envio.includes('@')
-                        ? `mailto:${vaga.contato_envio}`
-                        : `https://wa.me/${(vaga.contato_envio || '').replace(/[^0-9]/g, '')}`;
+                listaVagas.forEach(vaga => {
+                    if(vaga.status && vaga.status.toLowerCase() === 'aberta') {
+                        const linkContato = vaga.contato_envio.includes('@') 
+                            ? `mailto:${vaga.contato_envio}` 
+                            : `https://wa.me/${vaga.contato_envio.replace(/[^0-9]/g, '')}`;
 
-                    container.innerHTML += `
-                        <div class="card-vaga">
-                            <h4 style="color: var(--primary-blue); font-size: 18px;">${vaga.cargo}</h4>
-                            <p style="font-size:14px; color: var(--gray-text); margin-bottom: 8px;"><strong>Empresa:</strong> ${vaga.empresa || 'Confidencial'}</p>
-                            <p style="margin-bottom: 12px; font-size: 14px;">${vaga.requisitos}</p>
-                            <a href="${linkContato}" style="color: var(--accent-gold); font-weight:bold; text-decoration:none; font-size: 14px;" target="_blank">Enviar Currículo →</a>
-                        </div>
-                    `;
+                        container.innerHTML += `
+                            <div class="card-vaga">
+                                <h4 style="color: var(--primary-blue); font-size: 18px;">${vaga.cargo}</h4>
+                                <p style="font-size:14px; color: var(--gray-text); margin-bottom: 8px;"><strong>Empresa:</strong> ${vaga.empresa || 'Confidencial'}</p>
+                                <p style="margin-bottom: 12px; font-size: 14px;">${vaga.requisitos}</p>
+                                <a href="${linkContato}" style="color: var(--accent-gold); font-weight:bold; text-decoration:none; font-size: 14px;" target="_blank">Enviar Currículo →</a>
+                            </div>
+                        `;
+                    }
                 });
             } catch (erro) {
                 console.error("Erro na carga de Vagas:", erro);
             }
         }
 
-        // Módulo do Podcast
+        // Módulo do Videoteca Podcast
         async function carregarModuloPodcast() {
-            const container = document.getElementById('podcast-container');
             try {
                 const resposta = await fetch(LINKS_SHEETS.podcast);
                 const textoCsv = await resposta.text();
                 const listaEpisodios = converterCsvParaJson(textoCsv);
-
+                
+                const container = document.getElementById('podcast-container');
                 if (!container) return;
                 container.innerHTML = '';
 
                 listaEpisodios.forEach(ep => {
-                    let embedUrl = ep.youtube_url || '';
+                    let embedUrl = ep.youtube_url;
                     if (embedUrl.includes("watch?v=")) {
                         embedUrl = embedUrl.replace("watch?v=", "embed/");
                     } else if (embedUrl.includes("youtu.be/")) {
                         embedUrl = embedUrl.replace("youtu.be/", "youtube.com/embed/");
                     }
-
+                    
                     container.innerHTML += `
                         <div class="card-podcast" style="background: var(--white); border-radius: 8px; overflow:hidden; margin-bottom: 25px; border: 1px solid #e2e8f0;">
                             <iframe width="100%" height="200" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -569,6 +557,7 @@
             }
         }
 
+        // Inicialização das rotinas de carregamento
         window.onload = () => {
             carregarModuloImoveis();
             carregarModuloVagas();
