@@ -399,28 +399,44 @@
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv'
         };
 
-        // ✅ CORREÇÃO 1: Parser agora detecta TAB além de vírgula e ponto-e-vírgula
-        // ✅ CORREÇÃO 2: .trim() nos cabeçalhos remove espaços invisíveis (ex: "video_url ")
+        // Parser CSV robusto: suporta campos com vírgulas dentro de aspas duplas
+        function parsearLinhaCsv(linha) {
+            const campos = [];
+            let atual = '';
+            let dentroAspas = false;
+
+            for (let i = 0; i < linha.length; i++) {
+                const char = linha[i];
+                if (char === '"') {
+                    // Aspas duplas escapadas ("") dentro de um campo
+                    if (dentroAspas && linha[i + 1] === '"') {
+                        atual += '"';
+                        i++;
+                    } else {
+                        dentroAspas = !dentroAspas;
+                    }
+                } else if (char === ',' && !dentroAspas) {
+                    campos.push(atual.trim().replace(/\r/g, ''));
+                    atual = '';
+                } else {
+                    atual += char;
+                }
+            }
+            campos.push(atual.trim().replace(/\r/g, ''));
+            return campos;
+        }
+
         function converterCsvParaJson(textoCsv) {
             const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
 
-            // Detecta o separador: TAB tem prioridade, depois ; depois ,
-            let separador = ',';
-            if (linhas[0].includes('\t')) {
-                separador = '\t';
-            } else if (linhas[0].includes(';')) {
-                separador = ';';
-            }
-
-            // .trim() em cada cabeçalho elimina espaços e \r invisíveis
-            const cabecalhos = linhas[0].split(separador).map(c => c.trim().toLowerCase().replace(/\r/g, ''));
+            const cabecalhos = parsearLinhaCsv(linhas[0]).map(c => c.toLowerCase());
 
             return linhas.slice(1).map(linha => {
-                const valores = linha.split(separador);
+                const valores = parsearLinhaCsv(linha);
                 const objeto = {};
                 cabecalhos.forEach((cabecalho, i) => {
-                    objeto[cabecalho] = valores[i] ? valores[i].trim().replace(/\r/g, '') : '';
+                    objeto[cabecalho] = valores[i] !== undefined ? valores[i] : '';
                 });
                 return objeto;
             });
