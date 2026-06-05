@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam's Imóveis | Portal Jardim Santa Rita</title>
+    <style>
+        :root {
+            --primary-blue: #001f3f;
+            --accent-gold: #d4af37;
+            --light-bg: #f4f6f9;
+            --white: #ffffff;
+            --dark-text: #222222;
+            --gray-text: #666666;
+            --success-green: #25d366;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+        }
+
+        header {
+            background-color: var(--primary-blue);
+            border-bottom: 4px solid var(--accent-gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo h1 {
+            color: var(--white);
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--accent-gold);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 25px;
+        }
+
+        .nav-menu a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-gold);
+        }
+
+        .hero {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-gold);
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 15px auto;
+        }
+
+        .badge-creci {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid var(--accent-gold);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: var(--primary-blue);
+            margin-bottom: 30px;
+            border-left: 6px solid var(--accent-gold);
+            padding-left: 15px;
+            text-transform: uppercase;
+        }
+
+        .grid-imoveis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card-imovel {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s;
+        }
+
+        .card-imovel:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-body h4 {
+            font-size: 18px;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .card-meta {
+            font-size: 14px;
+            color: var(--gray-text);
+            margin-bottom: 10px;
+        }
+
+        .card-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin: 15px 0;
+        }
+
+        .btn-whatsapp {
+            display: block;
+            background-color: var(--success-green);
+            color: var(--white);
+            text-decoration: none;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128c7e;
+        }
+
+        .utilidade-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .col-esquerda {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .col-direita {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .card-vaga {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent-gold);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .box-info-util {
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 25px;
+            border-radius: 8px;
+            border-bottom: 4px solid var(--accent-gold);
+        }
+
+        .box-info-util h4 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .box-info-util ul {
+            list-style: none;
+        }
+
+        .box-info-util ul li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .comunidade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card-podcast {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .form-ouvidoria {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .btn-enviar {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 3px solid var(--accent-gold);
+            width: 100%;
+        }
+
+        footer {
+            background: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            border-top: 4px solid var(--accent-gold);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Sam's <span>Imóveis</span></h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#oportunidades">Oportunidades</a></li>
+                <li><a href="#utilidade">Mural & Empregos</a></li>
+                <li><a href="#comunidade">Comunidade & Podcast</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="inicio">
+        <h2>Lourival Sampaio</h2>
+        <p>Gestão Imobiliária e Assessoria Jurídica Documental</p>
+        <span class="badge-creci">CRECI 280761-F</span>
+    </section>
+
+    <div class="container">
+        <section id="oportunidades" style="margin-bottom: 60px;">
+            <h3 class="section-title">Oportunidades de Investimento</h3>
+            <div class="grid-imoveis" id="vitrine-container">
+                <p>Carregando imóveis da nuvem...</p>
+            </div>
+        </section>
+
+        <section id="utilidade" style="margin-bottom: 60px;">
+            <h3 class="section-title">Utilidade Pública & Empregos</h3>
+            <div class="utilidade-row">
+                <div class="col-esquerda">
+                    <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Vagas de Emprego na Região</h4>
+                    <div id="vagas-container">
+                        <p>Buscando vagas ativas...</p>
+                    </div>
+                </div>
+                <div class="col-direita">
+                    <div class="box-info-util">
+                        <h4>Guia de Serviços do Bairro</h4>
+                        <ul>
+                            <li><strong>🚌 Ônibus Municipais:</strong> Consulte os horários locais.</li>
+                            <li><strong>👶 Creche Municipal:</strong> Atendimento à primeira infância.</li>
+                            <li><strong>🏫 Ensino Fundamental I:</strong> Escola local do bairro.</li>
+                            <li><strong>🏢 CRAS:</strong> Assistência e atendimento social regional.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comunidade">
+            <h3 class="section-title">Voz da Comunidade</h3>
+            <div class="comunidade-grid">
+                <div>
+                    <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Podcast "59 Minutos"</h4>
+                    <div id="podcast-container">
+                        <p>Carregando episódios...</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Ouvidoria - Sugestões e Reclamações</h4>
+                    <form class="form-ouvidoria" action="https://api.web3forms.com/submit" method="POST">
+                        <input type="hidden" name="access_key" value="SEU_TOKEN_WEB3FORMS_AQUI">
+                        <div class="form-group">
+                            <label>Seu Nome</label>
+                            <input type="text" name="name" required placeholder="Digite seu nome completo">
+                        </div>
+                        <div class="form-group">
+                            <label>Seu Telefone/WhatsApp</label>
+                            <input type="tel" name="phone" required placeholder="(15) 99999-9999">
+                        </div>
+                        <div class="form-group">
+                            <label>Sua Demanda / Reclamação</label>
+                            <textarea name="message" rows="4" required placeholder="Descreva o problema ou sugestão para melhoria do bairro..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-enviar">Registrar Demanda Comunitária</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Sam's Imóveis - Jardim Santa Rita de Cássia, Capivari/SP</p>
+        <p style="font-size: 11px; color: var(--accent-gold); margin-top: 5px;">Desenvolvido por 65.611.420 FLAVIO GONCALES - Soluções em TI</p>
+    </footer>
+
+    <script>
+        // Links das Abas publicadas na Web (.csv) do Google Sheets
+        const LINKS_SHEETS = {
+            imoveis: 'COLE_AQUI_O_LINK_CSV_DA_ABA_IMOVEIS',
+            vagas: 'COLE_AQUI_O_LINK_CSV_DA_ABA_VAGAS',
+            podcast: 'COLE_AQUI_O_LINK_CSV_DA_ABA_PODCAST'
+        };
+
+        // Parser universal de CSV para JSON estruturado
+        function converterCsvParaJson(textoCsv) {
+            const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
+            if (linhas.length === 0) return [];
+            
+            const cabecalhos = linhas[0].split(',').map(c => c.trim().replace('\r', ''));
+            
+            return linhas.slice(1).map(linha => {
+                const valores = linha.split(',');
+                const objeto = {};
+                cabecalhos.forEach((cabecalho, i) => {
+                    objeto[cabecalho] = valores[i] ? valores[i].trim().replace('\r', '') : '';
+                });
+                return objeto;
+            });
+        }
+
+        // Carga Dinâmica de Imóveis (Cloudinary samsimoveis)
+        async function carregarModuloImoveis() {
+            try {
+                const resposta = await fetch(LINKS_SHEETS.imoveis);
+                const textoCsv = await resposta.text();
+                const listaImoveis = converterCsvParaJson(textoCsv);
+                
+                const container = document.getElementById('vitrine-container');
+                if (!container) return;
+                container.innerHTML = ''; 
+
+                listaImoveis.forEach(imovel => {
+                    if(imovel.status && imovel.status.toLowerCase() === 'disponivel') {
+                        
+                        let urlVideoDefinitiva = imovel.video_url;
+                        if (!urlVideoDefinitiva.startsWith('http')) {
+                            urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
+                        }
+
+                        container.innerHTML += `
+                            <div class="card-imovel">
+                                <div class="video-wrapper">
+                                    <video controls preload="metadata">
+                                        <source src="${urlVideoDefinitiva}" type="video/mp4">
+                                        Seu navegador não suporta vídeos.
+                                    </video>
+                                </div>
+                                <div class="card-body">
+                                    <h4>${imovel.titulo}</h4>
+                                    <p class="card-meta"><strong>Tipo:</strong> ${imovel.tipo} | <strong>Metragem:</strong> ${imovel.metragem}</p>
+                                    <div class="card-price">${imovel.preco}</div>
+                                    <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px;">${imovel.descricao}</p>
+                                    <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Gostaria+de+mais+informações+sobre+o+imóvel+ID+${imovel.id}+(${imovel.titulo})" class="btn-whatsapp" target="_blank">Tenho Interesse</a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            } catch (erro) {
+                console.error("Erro na carga de Imóveis:", erro);
+            }
+        }
+
+        // Carga Dinâmica de Vagas
+        async function carregarModuloVagas() {
+            try {
+                const resposta = await fetch(LINKS_SHEETS.vagas);
+                const textoCsv = await resposta.text();
+                const listaVagas = converterCsvParaJson(textoCsv);
+                
+                const container = document.getElementById('vagas-container');
+                if (!container) return;
+                container.innerHTML = '';
+
+                if(listaVagas.length === 0) {
+                    container.innerHTML = '<p>Nenhuma vaga disponível no momento.</p>';
+                    return;
+                }
+
+                listaVagas.forEach(vaga => {
+                    if(vaga.status && vaga.status.toLowerCase() === 'aberta') {
+                        const linkContato = vaga.contato_envio.includes('@') 
+                            ? `mailto:${vaga.contato_envio}` 
+                            : `https://wa.me/${vaga.contato_envio.replace(/[^0-9]/g, '')}`;
+
+                        container.innerHTML += `
+                            <div class="card-vaga">
+                                <h4 style="color: var(--primary-blue); font-size: 18px;">${vaga.cargo}</h4>
+                                <p style="font-size:14px; color: var(--gray-text); margin-bottom: 8px;"><strong>Empresa:</strong> ${vaga.empresa || 'Confidencial'}</p>
+                                <p style="margin-bottom: 12px; font-size: 14px;">${vaga.requisitos}</p>
+                                <a href="${linkContato}" style="color: var(--accent-gold); font-weight:bold; text-decoration:none; font-size: 14px;" target="_blank">Enviar Currículo →</a>
+                            </div>
+                        `;
+                    }
+                });
+            } catch (erro) {
+                console.error("Erro na carga de Vagas:", erro);
+            }
+        }
+
+        // Carga Dinâmica do Podcast
+        async function carregarModuloPodcast() {
+            try {
+                const resposta = await fetch(LINKS_SHEETS.podcast);
+                const textoCsv = await resposta.text();
+                const listaEpisodios = converterCsvParaJson(textoCsv);
+                
+                const container = document.getElementById('podcast-container');
+                if (!container) return;
+                container.innerHTML = '';
+
+                listaEpisodios.forEach(ep => {
+                    let embedUrl = ep.youtube_url;
+                    if (embedUrl.includes("watch?v=")) {
+                        embedUrl = embedUrl.replace("watch?v=", "embed/");
+                    } else if (embedUrl.includes("youtu.be/")) {
+                        embedUrl = embedUrl.replace("youtu.be/", "youtube.com/embed/");
+                    }
+                    
+                    container.innerHTML += `
+                        <div class="card-podcast" style="background: var(--white); border-radius: 8px; overflow:hidden; margin-bottom: 25px; border: 1px solid #e2e8f0;">
+                            <iframe width="100%" height="200" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <div style="padding:15px;">
+                                <span style="color: var(--accent-gold); font-size:12px; font-weight:bold; text-transform: uppercase;">${ep.episodio}</span>
+                                <h4 style="color: var(--primary-blue); margin:5px 0 10px 0; font-size: 16px;">Convidado: ${ep.entrevistado}</h4>
+                                <p style="font-size:13px; color: var(--gray-text);"><strong>Pauta:</strong> ${ep.tena}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (erro) {
+                console.error("Erro na carga do Podcast:", erro);
+            }
+        }
+
+        // Inicialização automática das funções
+        window.onload = () => {
+            carregarModuloImoveis();
+            carregarModuloVagas();
+            carregarModuloPodcast();
+        };
+    </script>
+</body>
+</html>
