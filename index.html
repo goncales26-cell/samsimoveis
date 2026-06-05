@@ -360,7 +360,7 @@
                 <div>
                     <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Podcast "59 Minutos"</h4>
                     <div id="podcast-container">
-                        <p>Carregando episódios...</p>
+                        <p>Carregando episodes...</p>
                     </div>
                 </div>
                 <div>
@@ -392,14 +392,14 @@
     </footer>
 
     <script>
-        // Links das Abas publicadas na Web (.csv) do Google Sheets
+        // Links das Abas publicadas na Web (.csv) do Google Sheets com credenciais reais
         const LINKS_SHEETS = {
-            imoveis: 'COLE_AQUI_O_LINK_CSV_DA_ABA_IMOVEIS',
-            vagas: 'COLE_AQUI_O_LINK_CSV_DA_ABA_VAGAS',
-            podcast: 'COLE_AQUI_O_LINK_CSV_DA_ABA_PODCAST'
+            imoveis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=0&single=true&output=csv',
+            vagas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&single=true&output=csv',
+            podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&single=true&output=csv'
         };
 
-        // Parser universal de CSV para JSON estruturado
+        // Parser de CSV estruturado para JSON limpo
         function converterCsvParaJson(textoCsv) {
             const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
@@ -416,7 +416,7 @@
             });
         }
 
-        // Carga Dinâmica de Imóveis (Cloudinary samsimoveis)
+        // Módulo Imobiliário (Cloudinary samsimoveis)
         async function carregarModuloImoveis() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.imoveis);
@@ -459,7 +459,7 @@
             }
         }
 
-        // Carga Dinâmica de Vagas
+        // Módulo do Balcão de Empregos
         async function carregarModuloVagas() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.vagas);
@@ -496,7 +496,7 @@
             }
         }
 
-        // Carga Dinâmica do Podcast
+        // Módulo do Videoteca Podcast
         async function carregarModuloPodcast() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.podcast);
@@ -531,7 +531,7 @@
             }
         }
 
-        // Inicialização automática das funções
+        // Disparo síncrono da API
         window.onload = () => {
             carregarModuloImoveis();
             carregarModuloVagas();
