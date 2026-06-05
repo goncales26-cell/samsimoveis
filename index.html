@@ -392,7 +392,7 @@
     </footer>
 
     <script>
-      // Links das Abas publicadas na Web (.csv) atualizados com a nova aba de imóveis
+        // Links das Abas publicadas na Web (.csv) limpos e validados sem single=true
         const LINKS_SHEETS = {
             imoveis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1582713778&output=csv',
             vagas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
@@ -401,10 +401,9 @@
 
         // Parser universal adaptativo para CSV (Vírgula ou Ponto e Vírgula)
         function converterCsvParaJson(textoCsv) {
-            const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
+            const linhas = textoCsv.split('\n').filter(linha => line = linha.trim() !== '');
             if (linhas.length === 0) return [];
             
-            // Detecta automaticamente se o separador é ponto e vírgula ou vírgula
             const separador = linhas[0].includes(';') ? ';' : ',';
             const cabecalhos = linhas[0].split(separador).map(c => c.trim().toLowerCase().replace('\r', ''));
             
@@ -418,7 +417,7 @@
             });
         }
 
-        // Módulo Imobiliário (Cloudinary samsimoveis)
+        // Módulo Imobiliário Dinâmico
         async function carregarModuloImoveis() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.imoveis);
@@ -533,7 +532,7 @@
             }
         }
 
-        // Disparo síncrono da API
+        // Inicialização das rotinas de carregamento
         window.onload = () => {
             carregarModuloImoveis();
             carregarModuloVagas();
