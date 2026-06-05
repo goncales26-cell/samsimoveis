@@ -392,11 +392,11 @@
     </footer>
 
     <script>
-        // Links das Abas publicadas na Web (.csv) do Google Sheets com credenciais reais
+      // Links das Abas publicadas na Web (.csv) limpos e validados para fetch
         const LINKS_SHEETS = {
-            imoveis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=0&single=true&output=csv',
-            vagas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&single=true&output=csv',
-            podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&single=true&output=csv'
+            imoveis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=0&output=csv',
+            vagas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
+            podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv'
         };
 
         // Parser universal adaptativo para CSV (Vírgula ou Ponto e Vírgula)
