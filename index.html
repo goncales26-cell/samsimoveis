@@ -399,15 +399,17 @@
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&single=true&output=csv'
         };
 
-        // Parser de CSV estruturado para JSON limpo
+        // Parser universal adaptativo para CSV (Vírgula ou Ponto e Vírgula)
         function converterCsvParaJson(textoCsv) {
             const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
             
-            const cabecalhos = linhas[0].split(',').map(c => c.trim().replace('\r', ''));
+            // Detecta automaticamente se o separador é ponto e vírgula ou vírgula
+            const separador = linhas[0].includes(';') ? ';' : ',';
+            const cabecalhos = linhas[0].split(separador).map(c => c.trim().toLowerCase().replace('\r', ''));
             
             return linhas.slice(1).map(linha => {
-                const valores = linha.split(',');
+                const valores = linha.split(separador);
                 const objeto = {};
                 cabecalhos.forEach((cabecalho, i) => {
                     objeto[cabecalho] = valores[i] ? valores[i].trim().replace('\r', '') : '';
