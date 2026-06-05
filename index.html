@@ -124,6 +124,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
+            justify-content: center;
         }
 
         .card-imovel {
@@ -133,6 +134,9 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
             transition: transform 0.3s;
+            width: 100%;
+            max-width: 420px; /* Impede que o card fique gigante quando houver apenas um anúncio */
+            margin: 0 auto;
         }
 
         .card-imovel:hover {
@@ -392,14 +396,12 @@
     </footer>
 
     <script>
-        // Links das Abas publicadas na Web (.csv) limpos e validados sem single=true
         const LINKS_SHEETS = {
             imoveis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1582713778&output=csv',
             vagas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv'
         };
 
-        // Função de parseamento avançada caractere por caractere (Respeita aspas e delimitadores regionais)
         function parsearLinhaCsv(linha, separador) {
             const resultado = [];
             let campoAtual = '';
@@ -409,7 +411,7 @@
                 const caractere = linha[i];
 
                 if (caractere === '"') {
-                    dentroDeAspas = !dentroDeAspas; // Chaveia o estado de aspas
+                    dentroDeAspas = !dentroDeAspas;
                 } else if (caractere === separador && !dentroDeAspas) {
                     resultado.push(campoAtual.trim());
                     campoAtual = '';
@@ -421,15 +423,11 @@
             return resultado;
         }
 
-        // Converter CSV para JSON estruturado usando o novo parser robusto
         function converterCsvParaJson(textoCsv) {
             const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
             
-            // Auto-detecta separador regional (vírgula ou ponto e vírgula)
             const separador = linhas[0].includes(';') ? ';' : ',';
-            
-            // Trata os cabeçalhos da primeira linha
             const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().replace('\r', ''));
             
             return linhas.slice(1).map(linha => {
@@ -442,7 +440,6 @@
             });
         }
 
-        // Módulo Imobiliário Dinâmico
         async function carregarModuloImoveis() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.imoveis);
@@ -485,7 +482,6 @@
             }
         }
 
-        // Módulo do Balcão de Empregos
         async function carregarModuloVagas() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.vagas);
@@ -522,7 +518,6 @@
             }
         }
 
-        // Módulo do Videoteca Podcast
         async function carregarModuloPodcast() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.podcast);
@@ -557,7 +552,6 @@
             }
         }
 
-        // Inicialização das rotinas de carregamento
         window.onload = () => {
             carregarModuloImoveis();
             carregarModuloVagas();
