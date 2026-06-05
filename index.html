@@ -401,7 +401,7 @@
 
         // Parser universal adaptativo para CSV (Vírgula ou Ponto e Vírgula)
         function converterCsvParaJson(textoCsv) {
-            const linhas = textoCsv.split('\n').filter(linha => line = linha.trim() !== '');
+            const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
             
             const separador = linhas[0].includes(';') ? ';' : ',';
