@@ -545,7 +545,7 @@
         async function carregarModuloVagas() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.vagas);
-                const textoCsv = await response = await resposta.text();
+                const textoCsv = await resposta.text();
                 const listaVagas = converterCsvParaJson(textoCsv);
                 
                 const container = document.getElementById('vagas-container');
