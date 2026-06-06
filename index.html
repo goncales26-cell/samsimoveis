@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Sam's Imóveis | Portal Jardim Santa Rita</title>
+    <meta name="description" content="Gestão Imobiliária e Assessoria Jurídica Documental - Lourival Sampaio. Encontre imóveis e oportunidades no Jardim Santa Rita de Cássia, Capivari/SP.">
+    <meta property="og:title" content="Sam's Imóveis | Portal Jardim Santa Rita">
+    <meta property="og:description" content="Gestão Imobiliária e Assessoria Jurídica Documental - Lourival Sampaio. Confira nossas oportunidades de investimento.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://res.cloudinary.com/samsimoveis/image/upload/v1/logo_compartilhamento.jpg">
+    
     <style>
         :root {
             --primary-blue: #001f3f;
@@ -135,8 +142,10 @@
             border: 1px solid #e2e8f0;
             transition: transform 0.3s;
             width: 100%;
-            max-width: 420px; /* Impede que o card fique gigante quando houver apenas um anúncio */
+            max-width: 420px;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .card-imovel:hover {
@@ -158,25 +167,57 @@
 
         .card-body {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .card-body h4 {
             font-size: 18px;
             color: var(--primary-blue);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .card-meta {
-            font-size: 14px;
-            color: var(--gray-text);
+        .badge-bairro {
+            font-size: 13px;
+            color: var(--white);
+            background-color: var(--primary-blue);
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .detalhes-tecnicos {
+            background-color: var(--light-bg);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: var(--dark-text);
+            line-height: 1.5;
+        }
+
+        .badge-financiamento {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
             margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
         }
 
         .card-price {
             font-size: 24px;
             font-weight: bold;
             color: var(--primary-blue);
-            margin: 15px 0;
+            margin: 10px 0 15px 0;
+            margin-top: auto;
         }
 
         .btn-whatsapp {
@@ -364,7 +405,7 @@
                 <div>
                     <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Podcast "59 Minutos"</h4>
                     <div id="podcast-container">
-                        <p>Carregando episodes...</p>
+                        <p>Carregando episódios...</p>
                     </div>
                 </div>
                 <div>
@@ -458,6 +499,19 @@
                             urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
                         }
 
+                        // Captura os novos campos estruturados (com valores padrão caso estejam vazios)
+                        const bairro = imovel.bairro || 'Jardim Santa Rita';
+                        const quartos = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
+                        const vagas = imovel.vagas && imovel.vagas !== '0' && imovel.vagas !== '-' ? `${imovel.vagas} Vaga(s)` : '';
+                        const financiamento = imovel.financiamento || '';
+
+                        // Monta a string de características técnicas internas
+                        let especificacoes = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
+                        if (quartos || vagas) {
+                            especificacoes += `<br>${[quartos, vagas].filter(Boolean).join(' | ')}`;
+                        }
+
+                        // Constrói o HTML dinâmico do card
                         container.innerHTML += `
                             <div class="card-imovel">
                                 <div class="video-wrapper">
@@ -468,9 +522,15 @@
                                 </div>
                                 <div class="card-body">
                                     <h4>${imovel.titulo}</h4>
-                                    <p class="card-meta"><strong>Tipo:</strong> ${imovel.tipo} | <strong>Metragem:</strong> ${imovel.metragem}</p>
+                                    <div>
+                                        <span class="badge-bairro">📍 ${bairro}</span>
+                                    </div>
+                                    <div class="detalhes-tecnicos">
+                                        ${especificacoes}
+                                    </div>
+                                    ${financiamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
+                                    <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px; line-height: 1.4;">${imovel.descricao}</p>
                                     <div class="card-price">${imovel.preco}</div>
-                                    <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px;">${imovel.descricao}</p>
                                     <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Gostaria+de+mais+informações+sobre+o+imóvel+ID+${imovel.id}+(${imovel.titulo})" class="btn-whatsapp" target="_blank">Tenho Interesse</a>
                                 </div>
                             </div>
@@ -485,7 +545,7 @@
         async function carregarModuloVagas() {
             try {
                 const resposta = await fetch(LINKS_SHEETS.vagas);
-                const textoCsv = await resposta.text();
+                const textoCsv = await response = await resposta.text();
                 const listaVagas = converterCsvParaJson(textoCsv);
                 
                 const container = document.getElementById('vagas-container');
