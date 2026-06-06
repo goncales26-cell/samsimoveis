@@ -454,7 +454,7 @@
             let campoAtual = '';
             let dentroDeAspas = false;
 
-            for (let i = 0; i < linha.length; i++) {
+            for (let i = 0; i < inline = linha.length; i++) {
                 const caractere = linha[i];
 
                 if (caractere === '"') {
@@ -477,7 +477,7 @@
             const separador = linhas[0].includes(';') ? ';' : ',';
             const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().replace('\r', ''));
             
-            return lines.slice(1).map(linha => {
+            return linhas.slice(1).map(linha => {
                 const valores = parsearLinhaCsv(linha, separador);
                 const objeto = {};
                 cabecalhos.forEach((cabecalho, i) => {
