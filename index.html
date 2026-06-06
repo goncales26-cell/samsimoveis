@@ -475,7 +475,8 @@
             const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
             
-            const separador = lines[0].includes(';') ? ';' : ',';
+            /* CORREÇÃO APLICADA: 'linhas[0]' em vez de 'lines[0]' */
+            const separador = linhas[0].includes(';') ? ';' : ',';
             const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().replace('\r', ''));
             
             return linhas.slice(1).map(linha => {
@@ -617,7 +618,6 @@
             }
         }
 
-        // Perfumaria: Máscara automática de telefone para o input da Ouvidoria
         const phoneInput = document.getElementById('phone-input');
         if (phoneInput) {
             phoneInput.addEventListener('input', (e) => {
