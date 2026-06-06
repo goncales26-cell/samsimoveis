@@ -129,9 +129,10 @@
 
         .grid-imoveis {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
             justify-content: center;
+            align-items: stretch;
         }
 
         .card-imovel {
@@ -142,10 +143,11 @@
             border: 1px solid #e2e8f0;
             transition: transform 0.3s;
             width: 100%;
-            max-width: 420px;
+            max-width: 350px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .card-imovel:hover {
@@ -499,23 +501,21 @@
                             urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
                         }
 
-                        // Captura os novos campos estruturados (com valores padrão caso estejam vazios)
+                        const posterUrl = imovel.poster_url || '';
                         const bairro = imovel.bairro || 'Jardim Santa Rita';
                         const quartos = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
                         const vagas = imovel.vagas && imovel.vagas !== '0' && imovel.vagas !== '-' ? `${imovel.vagas} Vaga(s)` : '';
                         const financiamento = imovel.financiamento || '';
 
-                        // Monta a string de características técnicas internas
                         let especificacoes = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
                         if (quartos || vagas) {
                             especificacoes += `<br>${[quartos, vagas].filter(Boolean).join(' | ')}`;
                         }
 
-                        // Constrói o HTML dinâmico do card
                         container.innerHTML += `
                             <div class="card-imovel">
                                 <div class="video-wrapper">
-                                    <video controls preload="metadata">
+                                    <video controls preload="metadata" ${posterUrl ? `poster="${posterUrl}"` : ''}>
                                         <source src="${urlVideoDefinitiva}" type="video/mp4">
                                         Seu navegador não suporta vídeos.
                                     </video>
