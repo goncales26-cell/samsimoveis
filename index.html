@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -10,6 +11,34 @@
     <meta property="og:description" content="Confira nossas oportunidades de investimento em compra e venda de imóveis no Jardim Santa Rita.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://samsimoveis.vercel.app/sams-imoveis.png">
+
+    <!-- ✅ CORREÇÃO 6: Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230A1F3E'/><text y='68' x='50' text-anchor='middle' font-size='52' font-family='serif' fill='%23EAC06E'>S</text></svg>">
+
+    <!-- ✅ CORREÇÃO 5: Schema.org RealEstateAgent para SEO local -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      "name": "SAMS Imóveis",
+      "description": "Compra e Venda de Imóveis por Lourival Sampaio no Jardim Santa Rita de Cássia, Capivari/SP.",
+      "url": "https://samsimoveis.vercel.app",
+      "telephone": "+5515981793811",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jardim Santa Rita de Cássia",
+        "addressLocality": "Capivari",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "employee": {
+        "@type": "Person",
+        "name": "Lourival Sampaio",
+        "jobTitle": "Corretor de Imóveis",
+        "description": "CRECI 280761-F"
+      }
+    }
+    </script>
     
     <style>
         :root {
@@ -352,6 +381,83 @@
             font-size: 14px;
         }
 
+        /* ✅ CORREÇÃO 7: Skeleton loader para carregamento visual */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .skeleton-card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .skeleton-video {
+            width: 100%;
+            padding-bottom: 56.25%;
+            position: relative;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .skeleton-body {
+            padding: 20px;
+        }
+
+        .skeleton-line {
+            height: 14px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skeleton-line.title { height: 20px; width: 80%; }
+        .skeleton-line.short { width: 50%; }
+        .skeleton-line.price { height: 28px; width: 40%; margin-top: 15px; }
+        .skeleton-line.btn { height: 44px; width: 100%; border-radius: 6px; margin-top: 10px; }
+
+        .skeleton-line::after,
+        .skeleton-video::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shimmer 1.4s infinite;
+        }
+
+        @keyframes shimmer {
+            to { left: 150%; }
+        }
+
+        /* ✅ CORREÇÃO 3: Mensagem amigável quando não há imóveis */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--gray-text);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state small {
+            font-size: 13px;
+        }
+
         /* =========================================
            MEDIA QUERIES - RESPONSIVIDADE MOBILE 
            ========================================= */
@@ -389,15 +495,15 @@
             }
 
             .grid-imoveis {
-                grid-template-columns: 1fr; /* Força 1 coluna em celulares */
+                grid-template-columns: 1fr;
             }
 
             .card-imovel {
-                max-width: 100%; /* Permite que o card ocupe a tela toda no celular */
+                max-width: 100%;
             }
 
             .col-esquerda, .col-direita {
-                min-width: 100%; /* Quebra as colunas de utilidade para empilhamento */
+                min-width: 100%;
             }
         }
     </style>
@@ -428,7 +534,29 @@
         <section id="oportunidades" style="margin-bottom: 60px;">
             <h3 class="section-title">Oportunidades de Investimento</h3>
             <div class="grid-imoveis" id="vitrine-container">
-                <p>Carregando imóveis da nuvem...</p>
+                <!-- ✅ CORREÇÃO 7: Skeleton loader inicial -->
+                <div class="skeleton-grid" style="grid-column:1/-1; display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:30px;">
+                    <div class="skeleton-card">
+                        <div class="skeleton-video"></div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-line title"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line price"></div>
+                            <div class="skeleton-line btn"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-card">
+                        <div class="skeleton-video"></div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-line title"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line price"></div>
+                            <div class="skeleton-line btn"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -468,7 +596,6 @@
                     <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Ouvidoria - Sugestões e Reclamações</h4>
                     <form class="form-ouvidoria" action="https://api.web3forms.com/submit" method="POST">
                         <input type="hidden" name="access_key" value="4bd45cd8-c87a-46ca-8c99-941134c23eab">
-                        
                         <input type="hidden" name="subject" value="Nova Demanda na Ouvidoria - SAMS Imoveis">
                         <input type="hidden" name="from_name" value="Portal SAMS Imoveis">
                         
@@ -503,6 +630,7 @@
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv'
         };
 
+        // Parser CSV robusto: suporta campos com vírgulas dentro de aspas duplas
         function parsearLinhaCsv(linha, separador) {
             const resultado = [];
             let campoAtual = '';
@@ -510,17 +638,21 @@
 
             for (let i = 0; i < linha.length; i++) {
                 const caractere = linha[i];
-
                 if (caractere === '"') {
-                    dentroDeAspas = !dentroDeAspas;
+                    if (dentroDeAspas && linha[i + 1] === '"') {
+                        campoAtual += '"';
+                        i++;
+                    } else {
+                        dentroDeAspas = !dentroDeAspas;
+                    }
                 } else if (caractere === separador && !dentroDeAspas) {
-                    resultado.push(campoAtual.trim());
+                    resultado.push(campoAtual.trim().replace(/\r/g, ''));
                     campoAtual = '';
                 } else {
                     campoAtual += caractere;
                 }
             }
-            resultado.push(campoAtual.trim());
+            resultado.push(campoAtual.trim().replace(/\r/g, ''));
             return resultado;
         }
 
@@ -529,74 +661,109 @@
             if (linhas.length === 0) return [];
             
             const separador = linhas[0].includes(';') ? ';' : ',';
-            const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().replace('\r', ''));
+            // ✅ Trim em todos os cabeçalhos para eliminar espaços invisíveis
+            const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().trim().replace(/\r/g, ''));
             
             return linhas.slice(1).map(linha => {
                 const valores = parsearLinhaCsv(linha, separador);
                 const objeto = {};
                 cabecalhos.forEach((cabecalho, i) => {
-                    objeto[cabecalho] = valores[i] ? valores[i].replace('\r', '') : '';
+                    objeto[cabecalho] = valores[i] ? valores[i].replace(/\r/g, '') : '';
                 });
                 return objeto;
             });
         }
 
+        // ✅ CORREÇÃO 3: Comparação de status robusta (ignora maiúsculas e acentos)
+        function statusDisponivel(status) {
+            if (!status) return false;
+            return status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() === 'disponivel';
+        }
+
         async function carregarModuloImoveis() {
+            const container = document.getElementById('vitrine-container');
             try {
                 const resposta = await fetch(LINKS_SHEETS.imoveis);
                 const textoCsv = await resposta.text();
                 const listaImoveis = converterCsvParaJson(textoCsv);
                 
-                const container = document.getElementById('vitrine-container');
                 if (!container) return;
-                container.innerHTML = ''; 
+                container.innerHTML = '';
 
-                listaImoveis.forEach(imovel => {
-                    if(imovel.status && imovel.status.toLowerCase() === 'disponivel') {
-                        
-                        let urlVideoDefinitiva = imovel.video_url;
-                        if (!urlVideoDefinitiva.startsWith('http')) {
-                            urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
-                        }
+                const disponiveis = listaImoveis.filter(imovel => statusDisponivel(imovel.status));
 
-                        const posterUrl = imovel.poster_url || '';
-                        const bairro = imovel.bairro || 'Jardim Santa Rita';
-                        const quartos = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
-                        const vagas = imovel.vagas && imovel.vagas !== '0' && imovel.vagas !== '-' ? `${imovel.vagas} Vaga(s)` : '';
-                        const financiamento = imovel.financiamento || '';
+                // ✅ CORREÇÃO 3: Mensagem amigável quando não há imóveis
+                if (disponiveis.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🏠</div>
+                            <p><strong>Nenhum imóvel disponível no momento.</strong></p>
+                            <small>Entre em contato pelo WhatsApp para consultar oportunidades exclusivas.</small><br><br>
+                            <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Gostaria+de+saber+sobre+imóveis+disponíveis." 
+                               style="display:inline-block; background:var(--success-green); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:bold; margin-top:10px;">
+                               Falar com o Corretor
+                            </a>
+                        </div>`;
+                    return;
+                }
 
-                        let especificacoes = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
-                        if (quartos || vagas) {
-                            especificacoes += `<br>${[quartos, vagas].filter(Boolean).join(' | ')}`;
-                        }
-
-                        container.innerHTML += `
-                            <div class="card-imovel">
-                                <div class="video-wrapper">
-                                    <video controls preload="metadata" ${posterUrl ? `poster="${posterUrl}"` : ''}>
-                                        <source src="${urlVideoDefinitiva}" type="video/mp4">
-                                        Seu navegador não suporta vídeos.
-                                    </video>
-                                </div>
-                                <div class="card-body">
-                                    <h4>${imovel.titulo}</h4>
-                                    <div>
-                                        <span class="badge-bairro">📍 ${bairro}</span>
-                                    </div>
-                                    <div class="detalhes-tecnicos">
-                                        ${especificacoes}
-                                    </div>
-                                    ${financiamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
-                                    <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px; line-height: 1.4;">${imovel.descricao}</p>
-                                    <div class="card-price">${imovel.preco}</div>
-                                    <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Gostaria+de+mais+informações+sobre+o+imóvel+ID+${imovel.id}+(${imovel.titulo})" class="btn-whatsapp" target="_blank">Tenho Interesse</a>
-                                </div>
-                            </div>
-                        `;
+                disponiveis.forEach(imovel => {
+                    let urlVideoDefinitiva = imovel.video_url;
+                    if (urlVideoDefinitiva && !urlVideoDefinitiva.startsWith('http')) {
+                        urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
                     }
+
+                    const posterUrl = imovel.poster_url || '';
+                    const bairro = imovel.bairro || 'Jardim Santa Rita';
+                    const quartos = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
+                    const vagas = imovel.vagas && imovel.vagas !== '0' && imovel.vagas !== '-' ? `${imovel.vagas} Vaga(s)` : '';
+                    const financiamento = imovel.financiamento || '';
+
+                    let especificacoes = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
+                    if (quartos || vagas) {
+                        especificacoes += `<br>${[quartos, vagas].filter(Boolean).join(' | ')}`;
+                    }
+
+                    // ✅ CORREÇÃO 2: aria-label e title no vídeo para acessibilidade/SEO
+                    container.innerHTML += `
+                        <div class="card-imovel">
+                            <div class="video-wrapper">
+                                <video controls preload="metadata"
+                                    title="Vídeo do imóvel: ${imovel.titulo}"
+                                    aria-label="Vídeo de apresentação: ${imovel.titulo}"
+                                    ${posterUrl ? `poster="${posterUrl}"` : ''}>
+                                    <source src="${urlVideoDefinitiva || ''}" type="video/mp4">
+                                    Seu navegador não suporta vídeos.
+                                </video>
+                            </div>
+                            <div class="card-body">
+                                <h4>${imovel.titulo}</h4>
+                                <div>
+                                    <span class="badge-bairro">📍 ${bairro}</span>
+                                </div>
+                                <div class="detalhes-tecnicos">
+                                    ${especificacoes}
+                                </div>
+                                ${financiamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
+                                <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px; line-height: 1.4;">${imovel.descricao}</p>
+                                <div class="card-price">${imovel.preco}</div>
+                                <!-- ✅ CORREÇÃO 4: Texto do botão mais descritivo -->
+                                <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Tenho+interesse+no+imóvel:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})" 
+                                   class="btn-whatsapp" target="_blank" 
+                                   aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp">
+                                   💬 Falar sobre este imóvel
+                                </a>
+                            </div>
+                        </div>
+                    `;
                 });
             } catch (erro) {
                 console.error("Erro na carga de Imóveis:", erro);
+                if (container) container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <p>Erro ao carregar imóveis. Tente novamente em instantes.</p>
+                    </div>`;
             }
         }
 
@@ -610,26 +777,26 @@
                 if (!container) return;
                 container.innerHTML = '';
 
-                if(listaVagas.length === 0) {
-                    container.innerHTML = '<p>Nenhuma vaga disponível no momento.</p>';
+                const abertas = listaVagas.filter(v => v.status && v.status.toLowerCase().trim() === 'aberta');
+
+                if (abertas.length === 0) {
+                    container.innerHTML = '<p style="color:var(--gray-text);">Nenhuma vaga disponível no momento.</p>';
                     return;
                 }
 
-                listaVagas.forEach(vaga => {
-                    if(vaga.status && vaga.status.toLowerCase() === 'aberta') {
-                        const linkContato = vaga.contato_envio.includes('@') 
-                            ? `mailto:${vaga.contato_envio}` 
-                            : `https://wa.me/${vaga.contato_envio.replace(/[^0-9]/g, '')}`;
+                abertas.forEach(vaga => {
+                    const linkContato = vaga.contato_envio && vaga.contato_envio.includes('@') 
+                        ? `mailto:${vaga.contato_envio}` 
+                        : `https://wa.me/${(vaga.contato_envio || '').replace(/[^0-9]/g, '')}`;
 
-                        container.innerHTML += `
-                            <div class="card-vaga">
-                                <h4 style="color: var(--primary-blue); font-size: 18px;">${vaga.cargo}</h4>
-                                <p style="font-size:14px; color: var(--gray-text); margin-bottom: 8px;"><strong>Empresa:</strong> ${vaga.empresa || 'Confidencial'}</p>
-                                <p style="margin-bottom: 12px; font-size: 14px;">${vaga.requisitos}</p>
-                                <a href="${linkContato}" style="color: var(--accent-gold); font-weight:bold; text-decoration:none; font-size: 14px;" target="_blank">Enviar Currículo →</a>
-                            </div>
-                        `;
-                    }
+                    container.innerHTML += `
+                        <div class="card-vaga">
+                            <h4 style="color: var(--primary-blue); font-size: 18px;">${vaga.cargo}</h4>
+                            <p style="font-size:14px; color: var(--gray-text); margin-bottom: 8px;"><strong>Empresa:</strong> ${vaga.empresa || 'Confidencial'}</p>
+                            <p style="margin-bottom: 12px; font-size: 14px;">${vaga.requisitos}</p>
+                            <a href="${linkContato}" style="color: var(--accent-gold); font-weight:bold; text-decoration:none; font-size: 14px;" target="_blank">Enviar Currículo →</a>
+                        </div>
+                    `;
                 });
             } catch (erro) {
                 console.error("Erro na carga de Vagas:", erro);
@@ -646,21 +813,35 @@
                 if (!container) return;
                 container.innerHTML = '';
 
+                if (listaEpisodios.length === 0) {
+                    container.innerHTML = '<p style="color:var(--gray-text);">Nenhum episódio disponível no momento.</p>';
+                    return;
+                }
+
                 listaEpisodios.forEach(ep => {
-                    let embedUrl = ep.youtube_url;
+                    let embedUrl = ep.youtube_url || '';
                     if (embedUrl.includes("watch?v=")) {
                         embedUrl = embedUrl.replace("watch?v=", "embed/");
                     } else if (embedUrl.includes("youtu.be/")) {
                         embedUrl = embedUrl.replace("youtu.be/", "youtube.com/embed/");
                     }
+
+                    // ✅ CORREÇÃO 1: Campo correto é "tema", não "tena"
+                    // Tenta "tema" primeiro, cai em "tena" por compatibilidade
+                    const pauta = ep.tema || ep.tena || '';
                     
                     container.innerHTML += `
                         <div class="card-podcast" style="background: var(--white); border-radius: 8px; overflow:hidden; margin-bottom: 25px; border: 1px solid #e2e8f0;">
-                            <iframe width="100%" height="200" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <iframe width="100%" height="200" src="${embedUrl}" 
+                                title="Podcast 59 Minutos - ${ep.entrevistado}" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
                             <div style="padding:15px;">
                                 <span style="color: var(--accent-gold); font-size:12px; font-weight:bold; text-transform: uppercase;">${ep.episodio}</span>
                                 <h4 style="color: var(--primary-blue); margin:5px 0 10px 0; font-size: 16px;">Convidado: ${ep.entrevistado}</h4>
-                                <p style="font-size:13px; color: var(--gray-text);"><strong>Pauta:</strong> ${ep.tena}</p>
+                                <p style="font-size:13px; color: var(--gray-text);"><strong>Pauta:</strong> ${pauta || 'Não informada'}</p>
                             </div>
                         </div>
                     `;
