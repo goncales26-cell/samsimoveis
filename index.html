@@ -154,11 +154,10 @@
             transform: translateY(-5px);
         }
 
-        /* Trava Arquitetônica do Player 16:9 */
         .video-wrapper {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* Força exatamente a proporção 16:9 */
+            padding-bottom: 56.25%;
             background: #000;
             overflow: hidden;
         }
@@ -169,7 +168,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Exibe vídeo vertical inteiro com barras pretas laterais */
+            object-fit: contain;
         }
 
         .card-body {
@@ -418,7 +417,7 @@
                 <div>
                     <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Ouvidoria - Sugestões e Reclamações</h4>
                     <form class="form-ouvidoria" action="https://api.web3forms.com/submit" method="POST">
-                        <input type="hidden" name="access_key" value="SEU_TOKEN_WEB3FORMS_AQUI">
+                        <input type="hidden" name="access_key" value="4bd45cd8-c87a-46ca-8c99-941134c23eab">
                         <div class="form-group">
                             <label>Seu Nome</label>
                             <input type="text" name="name" required placeholder="Digite seu nome completo">
@@ -478,7 +477,7 @@
             const separador = linhas[0].includes(';') ? ';' : ',';
             const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().replace('\r', ''));
             
-            return linhas.slice(1).map(linha => {
+            return lines.slice(1).map(linha => {
                 const valores = parsearLinhaCsv(linha, separador);
                 const objeto = {};
                 cabecalhos.forEach((cabecalho, i) => {
