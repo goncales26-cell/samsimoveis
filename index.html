@@ -351,6 +351,55 @@
             border-top: 4px solid var(--accent-gold);
             font-size: 14px;
         }
+
+        /* =========================================
+           MEDIA QUERIES - RESPONSIVIDADE MOBILE 
+           ========================================= */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 10px;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .nav-menu li {
+                margin-left: 0;
+            }
+
+            .hero {
+                padding: 40px 15px;
+            }
+
+            .hero h2 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .grid-imoveis {
+                grid-template-columns: 1fr; /* Força 1 coluna em celulares */
+            }
+
+            .card-imovel {
+                max-width: 100%; /* Permite que o card ocupe a tela toda no celular */
+            }
+
+            .col-esquerda, .col-direita {
+                min-width: 100%; /* Quebra as colunas de utilidade para empilhamento */
+            }
+        }
     </style>
 </head>
 <body>
