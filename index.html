@@ -396,10 +396,10 @@
                     <div class="box-info-util">
                         <h4>Guia de Serviços do Bairro</h4>
                         <ul>
-                            <li><strong>🚌 Ônibus Municipais:</strong> Consulte os horários locais.</li>
-                            <li><strong>👶 Creche Municipal:</strong> Atendimento à primeira infância.</li>
-                            <li><strong>🏫 Ensino Fundamental I:</strong> Escola local do bairro.</li>
-                            <li><strong>🏢 CRAS:</strong> Assistência e atendimento social regional.</li>
+                            <li><strong>Ônibus Municipais:</strong> Consulte os horários locais.</li>
+                            <li><strong>Creche Municipal:</strong> Atendimento à primeira infância.</li>
+                            <li><strong>Ensino Fundamental I:</strong> Escola local do bairro.</li>
+                            <li><strong>CRAS:</strong> Assistência e atendimento social regional.</li>
                         </ul>
                     </div>
                 </div>
@@ -419,17 +419,21 @@
                     <h4 style="color: var(--primary-blue); margin-bottom: 15px;">Ouvidoria - Sugestões e Reclamações</h4>
                     <form class="form-ouvidoria" action="https://api.web3forms.com/submit" method="POST">
                         <input type="hidden" name="access_key" value="4bd45cd8-c87a-46ca-8c99-941134c23eab">
+                        
+                        <input type="hidden" name="subject" value="Nova Demanda na Ouvidoria - SAMS Imoveis">
+                        <input type="hidden" name="from_name" value="Portal SAMS Imoveis">
+                        
                         <div class="form-group">
                             <label>Seu Nome</label>
-                            <input type="text" name="name" required placeholder="Digite seu nome completo">
+                            <input type="text" name="Nome" required placeholder="Digite seu nome completo">
                         </div>
                         <div class="form-group">
                             <label>Seu Telefone/WhatsApp</label>
-                            <input type="tel" name="phone" id="phone-input" required placeholder="(15) 99999-9999">
+                            <input type="tel" name="WhatsApp" id="phone-input" required placeholder="(15) 99999-9999">
                         </div>
                         <div class="form-group">
                             <label>Sua Demanda / Reclamação</label>
-                            <textarea name="message" rows="4" required placeholder="Descreva o problema ou sugestão para melhoria do bairro..."></textarea>
+                            <textarea name="Mensagem_da_Ouvidoria" rows="4" required placeholder="Descreva o problema ou sugestão para melhoria do bairro..."></textarea>
                         </div>
                         <button type="submit" class="btn-enviar">Registrar Demanda Comunitária</button>
                     </form>
@@ -475,7 +479,6 @@
             const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
             if (linhas.length === 0) return [];
             
-            /* CORREÇÃO APLICADA: 'linhas[0]' em vez de 'lines[0]' */
             const separador = linhas[0].includes(';') ? ';' : ',';
             const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().replace('\r', ''));
             
