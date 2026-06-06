@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,10 +11,8 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://samsimoveis.vercel.app/sams-imoveis.png">
 
-    <!-- ✅ CORREÇÃO 6: Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230A1F3E'/><text y='68' x='50' text-anchor='middle' font-size='52' font-family='serif' fill='%23EAC06E'>S</text></svg>">
 
-    <!-- ✅ CORREÇÃO 5: Schema.org RealEstateAgent para SEO local -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -157,6 +154,36 @@
             text-transform: uppercase;
         }
 
+        /* ESTILOS DOS FILTROS */
+        .filtros-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-filtro {
+            background: var(--white);
+            color: var(--primary-blue);
+            border: 1px solid #cbd5e1;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-filtro:hover {
+            background: var(--light-bg);
+        }
+
+        .btn-filtro.active {
+            background: var(--primary-blue);
+            color: var(--accent-gold);
+            border-color: var(--primary-blue);
+        }
+
         .grid-imoveis {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -272,6 +299,36 @@
             background-color: #128c7e;
         }
 
+        /* BOTÃO FLUTUANTE WHATSAPP */
+        .btn-flutuante-wa {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--success-green);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            transition: transform 0.3s ease;
+            animation: pulse-wa 2s infinite;
+        }
+
+        .btn-flutuante-wa:hover {
+            transform: scale(1.1);
+            animation: none;
+        }
+
+        @keyframes pulse-wa {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
         .utilidade-row {
             display: flex;
             flex-wrap: wrap;
@@ -379,9 +436,10 @@
             margin-top: 50px;
             border-top: 4px solid var(--accent-gold);
             font-size: 14px;
+            padding-bottom: 80px; /* Espaço para o botão do whats não cobrir o rodapé */
         }
 
-        /* ✅ CORREÇÃO 7: Skeleton loader para carregamento visual */
+        /* Skeleton loader */
         .skeleton-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -436,7 +494,6 @@
             to { left: 150%; }
         }
 
-        /* ✅ CORREÇÃO 3: Mensagem amigável quando não há imóveis */
         .empty-state {
             text-align: center;
             padding: 50px 20px;
@@ -458,9 +515,7 @@
             font-size: 13px;
         }
 
-        /* =========================================
-           MEDIA QUERIES - RESPONSIVIDADE MOBILE 
-           ========================================= */
+        /* MEDIA QUERIES */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -486,12 +541,11 @@
                 font-size: 28px;
             }
 
-            .hero p {
-                font-size: 16px;
-            }
-
-            .section-title {
-                font-size: 24px;
+            .btn-flutuante-wa {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
             }
 
             .grid-imoveis {
@@ -533,8 +587,15 @@
     <div class="container">
         <section id="oportunidades" style="margin-bottom: 60px;">
             <h3 class="section-title">Oportunidades de Investimento</h3>
+            
+            <div class="filtros-container">
+                <button class="btn-filtro active" data-filter="todos">Todos</button>
+                <button class="btn-filtro" data-filter="casa">Casas</button>
+                <button class="btn-filtro" data-filter="terreno">Terrenos & Lotes</button>
+                <button class="btn-filtro" data-filter="chacara">Chácaras</button>
+            </div>
+
             <div class="grid-imoveis" id="vitrine-container">
-                <!-- ✅ CORREÇÃO 7: Skeleton loader inicial -->
                 <div class="skeleton-grid" style="grid-column:1/-1; display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:30px;">
                     <div class="skeleton-card">
                         <div class="skeleton-video"></div>
@@ -618,6 +679,12 @@
         </section>
     </div>
 
+    <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Vim+pelo+portal+e+gostaria+de+atendimento." class="btn-flutuante-wa" target="_blank" aria-label="Falar no WhatsApp">
+        <svg viewBox="0 0 32 32" width="35" height="35" fill="white">
+            <path d="M16.05 2.15A13.9 13.9 0 0 0 2.1 16.05c0 2.45.64 4.84 1.84 6.95L2 29.9l7.07-1.87a13.84 13.84 0 0 0 6.98 1.87h.02A13.9 13.9 0 0 0 29.95 16.05 13.9 13.9 0 0 0 16.05 2.15zM16.07 27.52a11.54 11.54 0 0 1-5.9-1.6l-.42-.25-4.38 1.15 1.17-4.27-.28-.44a11.54 11.54 0 0 1-1.78-6.1A11.58 11.58 0 0 1 16.07 4.46a11.58 11.58 0 0 1 11.56 11.58A11.58 11.58 0 0 1 16.07 27.52zm6.34-8.6c-.35-.18-2.07-1.03-2.38-1.15-.32-.11-.55-.17-.78.18-.23.34-.9 1.14-1.1 1.38-.2.23-.4.26-.75.08A9.45 9.45 0 0 1 14.6 17.65c-.6-.62-1.02-1.38-1.14-1.72-.11-.35-.01-.54.16-.7.16-.16.35-.4.52-.6.18-.2.24-.35.35-.58.12-.23.06-.44-.03-.62-.08-.18-.78-1.88-1.07-2.58-.28-.68-.57-.59-.78-.6-.2-.01-.43-.01-.66-.01s-.6.08-.91.43c-.32.34-1.2 1.17-1.2 2.85 0 1.68 1.23 3.3 1.4 3.53.17.23 2.4 3.67 5.82 5.14 2.27.97 3.12 1.05 4.22.95 1.11-.1 3.58-1.46 4.08-2.87.5-1.4.5-2.61.35-2.87-.14-.26-.52-.4-.87-.58z"/>
+        </svg>
+    </a>
+
     <footer>
         <p>&copy; 2026 SAMS Imóveis - Jardim Santa Rita de Cássia, Capivari/SP</p>
         <p style="font-size: 11px; color: var(--accent-gold); margin-top: 5px;">Desenvolvido por 65.611.420 FLAVIO GONCALES - Soluções em TI</p>
@@ -630,7 +697,9 @@
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv'
         };
 
-        // Parser CSV robusto: suporta campos com vírgulas dentro de aspas duplas
+        // VARIÁVEL GLOBAL PARA OS FILTROS
+        let baseImoveis = [];
+
         function parsearLinhaCsv(linha, separador) {
             const resultado = [];
             let campoAtual = '';
@@ -661,7 +730,6 @@
             if (linhas.length === 0) return [];
             
             const separador = linhas[0].includes(';') ? ';' : ',';
-            // ✅ Trim em todos os cabeçalhos para eliminar espaços invisíveis
             const cabecalhos = parsearLinhaCsv(linhas[0], separador).map(c => c.toLowerCase().trim().replace(/\r/g, ''));
             
             return linhas.slice(1).map(linha => {
@@ -674,10 +742,91 @@
             });
         }
 
-        // ✅ CORREÇÃO 3: Comparação de status robusta (ignora maiúsculas e acentos)
         function statusDisponivel(status) {
             if (!status) return false;
             return status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() === 'disponivel';
+        }
+
+        // FUNÇÃO DE RENDERIZAÇÃO COM FILTRO
+        function renderizarVitrine(filtroAtivo = 'todos') {
+            const container = document.getElementById('vitrine-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            // Lógica do filtro
+            const filtrados = baseImoveis.filter(imovel => {
+                if (filtroAtivo === 'todos') return true;
+                const tipo = (imovel.tipo || '').toLowerCase();
+                
+                if (filtroAtivo === 'casa') return tipo.includes('casa') || tipo.includes('sobrado');
+                if (filtroAtivo === 'terreno') return tipo.includes('terreno') || tipo.includes('lote');
+                if (filtroAtivo === 'chacara') return tipo.includes('chácara') || tipo.includes('chacara') || tipo.includes('sitio');
+                
+                return true;
+            });
+
+            if (filtrados.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <p><strong>Nenhum imóvel desse tipo encontrado no momento.</strong></p>
+                        <small>Entre em contato pelo WhatsApp para consultar oportunidades exclusivas.</small><br><br>
+                        <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Estou+buscando+opções+de+${filtroAtivo}." 
+                           style="display:inline-block; background:var(--success-green); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:bold; margin-top:10px;">
+                           Falar com o Corretor
+                        </a>
+                    </div>`;
+                return;
+            }
+
+            filtrados.forEach(imovel => {
+                let urlVideoDefinitiva = imovel.video_url;
+                if (urlVideoDefinitiva && !urlVideoDefinitiva.startsWith('http')) {
+                    urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
+                }
+
+                const posterUrl = imovel.poster_url || '';
+                const bairro = imovel.bairro || 'Jardim Santa Rita';
+                const quartos = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
+                const vagas = imovel.vagas && imovel.vagas !== '0' && imovel.vagas !== '-' ? `${imovel.vagas} Vaga(s)` : '';
+                const financiamento = imovel.financiamento || '';
+
+                let especificacoes = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
+                if (quartos || vagas) {
+                    especificacoes += `<br>${[quartos, vagas].filter(Boolean).join(' | ')}`;
+                }
+
+                container.innerHTML += `
+                    <div class="card-imovel">
+                        <div class="video-wrapper">
+                            <video controls preload="metadata"
+                                title="Vídeo do imóvel: ${imovel.titulo}"
+                                aria-label="Vídeo de apresentação: ${imovel.titulo}"
+                                ${posterUrl ? `poster="${posterUrl}"` : ''}>
+                                <source src="${urlVideoDefinitiva || ''}" type="video/mp4">
+                                Seu navegador não suporta vídeos.
+                            </video>
+                        </div>
+                        <div class="card-body">
+                            <h4>${imovel.titulo}</h4>
+                            <div>
+                                <span class="badge-bairro">📍 ${bairro}</span>
+                            </div>
+                            <div class="detalhes-tecnicos">
+                                ${especificacoes}
+                            </div>
+                            ${financiamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
+                            <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px; line-height: 1.4;">${imovel.descricao}</p>
+                            <div class="card-price">${imovel.preco}</div>
+                            <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Tenho+interesse+no+imóvel:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})" 
+                               class="btn-whatsapp" target="_blank" 
+                               aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp">
+                               💬 Falar sobre este imóvel
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         async function carregarModuloImoveis() {
@@ -687,76 +836,12 @@
                 const textoCsv = await resposta.text();
                 const listaImoveis = converterCsvParaJson(textoCsv);
                 
-                if (!container) return;
-                container.innerHTML = '';
+                // Armazena na variável global apenas os disponíveis
+                baseImoveis = listaImoveis.filter(imovel => statusDisponivel(imovel.status));
+                
+                // Renderiza inicialmente com o filtro "todos"
+                renderizarVitrine('todos');
 
-                const disponiveis = listaImoveis.filter(imovel => statusDisponivel(imovel.status));
-
-                // ✅ CORREÇÃO 3: Mensagem amigável quando não há imóveis
-                if (disponiveis.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-icon">🏠</div>
-                            <p><strong>Nenhum imóvel disponível no momento.</strong></p>
-                            <small>Entre em contato pelo WhatsApp para consultar oportunidades exclusivas.</small><br><br>
-                            <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Gostaria+de+saber+sobre+imóveis+disponíveis." 
-                               style="display:inline-block; background:var(--success-green); color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:bold; margin-top:10px;">
-                               Falar com o Corretor
-                            </a>
-                        </div>`;
-                    return;
-                }
-
-                disponiveis.forEach(imovel => {
-                    let urlVideoDefinitiva = imovel.video_url;
-                    if (urlVideoDefinitiva && !urlVideoDefinitiva.startsWith('http')) {
-                        urlVideoDefinitiva = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${imovel.video_url}`;
-                    }
-
-                    const posterUrl = imovel.poster_url || '';
-                    const bairro = imovel.bairro || 'Jardim Santa Rita';
-                    const quartos = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
-                    const vagas = imovel.vagas && imovel.vagas !== '0' && imovel.vagas !== '-' ? `${imovel.vagas} Vaga(s)` : '';
-                    const financiamento = imovel.financiamento || '';
-
-                    let especificacoes = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
-                    if (quartos || vagas) {
-                        especificacoes += `<br>${[quartos, vagas].filter(Boolean).join(' | ')}`;
-                    }
-
-                    // ✅ CORREÇÃO 2: aria-label e title no vídeo para acessibilidade/SEO
-                    container.innerHTML += `
-                        <div class="card-imovel">
-                            <div class="video-wrapper">
-                                <video controls preload="metadata"
-                                    title="Vídeo do imóvel: ${imovel.titulo}"
-                                    aria-label="Vídeo de apresentação: ${imovel.titulo}"
-                                    ${posterUrl ? `poster="${posterUrl}"` : ''}>
-                                    <source src="${urlVideoDefinitiva || ''}" type="video/mp4">
-                                    Seu navegador não suporta vídeos.
-                                </video>
-                            </div>
-                            <div class="card-body">
-                                <h4>${imovel.titulo}</h4>
-                                <div>
-                                    <span class="badge-bairro">📍 ${bairro}</span>
-                                </div>
-                                <div class="detalhes-tecnicos">
-                                    ${especificacoes}
-                                </div>
-                                ${financiamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
-                                <p style="font-size: 14px; color: var(--gray-text); margin-bottom: 15px; line-height: 1.4;">${imovel.descricao}</p>
-                                <div class="card-price">${imovel.preco}</div>
-                                <!-- ✅ CORREÇÃO 4: Texto do botão mais descritivo -->
-                                <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Tenho+interesse+no+imóvel:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})" 
-                                   class="btn-whatsapp" target="_blank" 
-                                   aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp">
-                                   💬 Falar sobre este imóvel
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                });
             } catch (erro) {
                 console.error("Erro na carga de Imóveis:", erro);
                 if (container) container.innerHTML = `
@@ -766,6 +851,18 @@
                     </div>`;
             }
         }
+
+        // EVENTOS DOS BOTÕES DE FILTRO
+        document.querySelectorAll('.btn-filtro').forEach(botao => {
+            botao.addEventListener('click', (e) => {
+                // Remove a classe active de todos
+                document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('active'));
+                // Adiciona no clicado
+                e.target.classList.add('active');
+                // Executa a filtragem
+                renderizarVitrine(e.target.getAttribute('data-filter'));
+            });
+        });
 
         async function carregarModuloVagas() {
             try {
@@ -826,8 +923,6 @@
                         embedUrl = embedUrl.replace("youtu.be/", "youtube.com/embed/");
                     }
 
-                    // ✅ CORREÇÃO 1: Campo correto é "tema", não "tena"
-                    // Tenta "tema" primeiro, cai em "tena" por compatibilidade
                     const pauta = ep.tema || ep.tena || '';
                     
                     container.innerHTML += `
