@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,10 +7,24 @@
     
     <title>SAMS Imóveis | Portal Jardim Santa Rita</title>
     <meta name="description" content="SAMS Imóveis - Compra e Venda de Imóveis por Lourival Sampaio. Encontre as melhores oportunidades no Jardim Santa Rita de Cássia, Capivari/SP.">
+    
+    <!-- ✅ Open Graph completo para WhatsApp, Telegram e redes sociais -->
     <meta property="og:title" content="SAMS Imóveis | Portal Jardim Santa Rita">
     <meta property="og:description" content="Confira nossas oportunidades de investimento em compra e venda de imóveis no Jardim Santa Rita.">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://samsimoveis.vercel.app">
     <meta property="og:image" content="https://samsimoveis.vercel.app/sams-imoveis.png">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="200">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="SAMS Imóveis">
+
+    <!-- ✅ Tags Twitter/Telegram -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SAMS Imóveis | Portal Jardim Santa Rita">
+    <meta name="twitter:description" content="Confira nossas oportunidades de investimento em compra e venda de imóveis no Jardim Santa Rita.">
+    <meta name="twitter:image" content="https://samsimoveis.vercel.app/sams-imoveis.png">
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230A1F3E'/><text y='68' x='50' text-anchor='middle' font-size='52' font-family='serif' fill='%23EAC06E'>S</text></svg>">
 
@@ -697,7 +712,6 @@
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv'
         };
 
-        // VARIÁVEL GLOBAL PARA OS FILTROS
         let baseImoveis = [];
 
         function parsearLinhaCsv(linha, separador) {
@@ -747,21 +761,17 @@
             return status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() === 'disponivel';
         }
 
-        // FUNÇÃO DE RENDERIZAÇÃO COM FILTRO
         function renderizarVitrine(filtroAtivo = 'todos') {
             const container = document.getElementById('vitrine-container');
             if (!container) return;
             container.innerHTML = '';
 
-            // Lógica do filtro
             const filtrados = baseImoveis.filter(imovel => {
                 if (filtroAtivo === 'todos') return true;
                 const tipo = (imovel.tipo || '').toLowerCase();
-                
                 if (filtroAtivo === 'casa') return tipo.includes('casa') || tipo.includes('sobrado');
                 if (filtroAtivo === 'terreno') return tipo.includes('terreno') || tipo.includes('lote');
                 if (filtroAtivo === 'chacara') return tipo.includes('chácara') || tipo.includes('chacara') || tipo.includes('sitio');
-                
                 return true;
             });
 
@@ -835,13 +845,8 @@
                 const resposta = await fetch(LINKS_SHEETS.imoveis);
                 const textoCsv = await resposta.text();
                 const listaImoveis = converterCsvParaJson(textoCsv);
-                
-                // Armazena na variável global apenas os disponíveis
                 baseImoveis = listaImoveis.filter(imovel => statusDisponivel(imovel.status));
-                
-                // Renderiza inicialmente com o filtro "todos"
                 renderizarVitrine('todos');
-
             } catch (erro) {
                 console.error("Erro na carga de Imóveis:", erro);
                 if (container) container.innerHTML = `
@@ -852,14 +857,10 @@
             }
         }
 
-        // EVENTOS DOS BOTÕES DE FILTRO
         document.querySelectorAll('.btn-filtro').forEach(botao => {
             botao.addEventListener('click', (e) => {
-                // Remove a classe active de todos
                 document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('active'));
-                // Adiciona no clicado
                 e.target.classList.add('active');
-                // Executa a filtragem
                 renderizarVitrine(e.target.getAttribute('data-filter'));
             });
         });
