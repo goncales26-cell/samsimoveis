@@ -955,12 +955,11 @@
             }
         }
 
-        // NOVO MÓDULO: CARGA DOS PARCEIROS
+        // NOVO MÓDULO: CARGA DOS PARCEIROS (COM AUTOMAÇÃO CLOUDINARY E WHATSAPP)
         async function carregarModuloParceiros() {
             const container = document.getElementById('parceiros-container');
             if (!container) return;
 
-            // Se o link da planilha ainda for o placeholder, avisa para configurar
             if (LINKS_SHEETS.parceiros === 'INSIRA_O_LINK_DO_CSV_DA_ABA_PARCEIROS_AQUI') {
                 container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color: var(--gray-text);">Aba de parceiros ainda não configurada.</p>';
                 return;
@@ -980,14 +979,23 @@
                 }
 
                 ativos.forEach(p => {
-                    // Lógica para exibir os botões apenas se os links existirem na planilha
+                    // AUTOMAÇÃO CLOUDINARY: Se for apenas o nome do arquivo, completa o link
+                    let urlImagem = p.imagem_url || 'https://via.placeholder.com/100';
+                    if (p.imagem_url && !p.imagem_url.startsWith('http')) {
+                        urlImagem = `https://res.cloudinary.com/samsimoveis/image/upload/f_auto,q_auto/${p.imagem_url}`;
+                    }
+
+                    // Lógica para exibir os botões do Instagram e Site
                     const btnInsta = p.link_instagram ? `<a href="${p.link_instagram}" target="_blank" class="btn-filtro" style="padding: 6px 12px; border-radius: 8px;" aria-label="Instagram"><i class="bi bi-instagram"></i></a>` : '';
                     const btnWeb = p.link_website ? `<a href="${p.link_website}" target="_blank" class="btn-filtro" style="padding: 6px 12px; border-radius: 8px;" aria-label="Website"><i class="bi bi-globe"></i></a>` : '';
-                    const btnWhats = p.link_whatsapp ? `<a href="${p.link_whatsapp}" target="_blank" class="btn-filtro" style="padding: 6px 12px; background: var(--success-green); color: white; border-color: var(--success-green); border-radius: 8px;" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>` : '';
+                    
+                    // AUTOMAÇÃO WHATSAPP: Limpa tudo que não for número e monta o link wa.me
+                    const numeroLimpo = p.link_whatsapp ? p.link_whatsapp.replace(/\D/g, '') : '';
+                    const btnWhats = numeroLimpo ? `<a href="https://wa.me/55${numeroLimpo}" target="_blank" class="btn-filtro" style="padding: 6px 12px; background: var(--success-green); color: white; border-color: var(--success-green); border-radius: 8px;" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>` : '';
 
                     container.innerHTML += `
                         <div class="card-imovel" style="max-width: 250px; padding: 20px; text-align: center; border-radius: 12px;">
-                            <img src="${p.imagem_url || 'https://via.placeholder.com/100'}" alt="${p.nome}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: contain; margin: 0 auto 15px; border: 3px solid var(--accent-gold); background: #fff;">
+                            <img src="${urlImagem}" alt="${p.nome}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: contain; margin: 0 auto 15px; border: 3px solid var(--accent-gold); background: #fff;">
                             <h4 style="font-size: 16px; margin-bottom: 5px; color: var(--primary-blue); font-weight:bold;">${p.nome}</h4>
                             <p style="font-size: 13px; color: var(--gray-text); margin-bottom: 15px;">${p.categoria || 'Parceiro Local'}</p>
                             <div style="display: flex; justify-content: center; gap: 8px;">
