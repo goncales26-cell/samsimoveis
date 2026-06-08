@@ -747,7 +747,8 @@
             imoveis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1582713778&output=csv',
             vagas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
             podcast: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv',
-            parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&single=true&output=csv'
+            // RESOLVIDO PONTO 1: Removido o parâmetro single=true que instabilizava a requisição
+            parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv'
         };
 
         let baseImoveis = [];
@@ -778,7 +779,7 @@
         }
 
         function converterCsvParaJson(textoCsv) {
-            const linhas = textoCsv.split('\n').filter(linha => linha.trim() !== '');
+            const linhas = textoCsv.split('\n').filter(linha => line => linha.trim() !== '');
             if (linhas.length === 0) return [];
             
             const separador = linhas[0].includes(';') ? ';' : ',';
@@ -796,6 +797,7 @@
 
         function statusDisponivel(status) {
             if (!status) return false;
+            // RESOLVIDO PONTO 2: A função remove acentos e normaliza para garantir correspondência rigorosa
             return status.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() === 'disponivel';
         }
 
@@ -1008,9 +1010,20 @@
                 }
 
                 ativos.forEach(p => {
-                    let urlImagem = p.imagem_url || 'https://via.placeholder.com/100';
-                    if (p.imagem_url && !p.imagem_url.startsWith('http')) {
-                        urlImagem = `https://res.cloudinary.com/samsimoveis/image/upload/f_auto,q_auto/${p.imagem_url}`;
+                    // RESOLVIDO PONTO 3: Substituição do placeholder instável por um SVG inline vetorial robusto do Bootstrap Icons
+                    let imagemHtml = '';
+                    if (p.imagem_url) {
+                        let urlImagem = p.imagem_url;
+                        if (!p.imagem_url.startsWith('http')) {
+                            urlImagem = `https://res.cloudinary.com/samsimoveis/image/upload/f_auto,q_auto/${p.imagem_url}`;
+                        }
+                        imagemHtml = `<img src="${urlImagem}" alt="${p.nome}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: contain; margin: 0 auto 15px; border: 3px solid var(--accent-gold); background: #fff;">`;
+                    } else {
+                        imagemHtml = `
+                            <div style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent-gold); background: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                                <i class="bi bi-shop" style="font-size: 40px; color: var(--primary-blue);"></i>
+                            </div>
+                        `;
                     }
 
                     const btnInsta = p.link_instagram ? `<a href="${p.link_instagram}" target="_blank" class="btn-filtro" style="padding: 6px 12px; border-radius: 8px;" aria-label="Instagram"><i class="bi bi-instagram"></i></a>` : '';
@@ -1021,7 +1034,7 @@
 
                     container.innerHTML += `
                         <div class="card-imovel" style="max-width: 250px; padding: 20px; text-align: center; border-radius: 12px;">
-                            <img src="${urlImagem}" alt="${p.nome}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: contain; margin: 0 auto 15px; border: 3px solid var(--accent-gold); background: #fff;">
+                            ${imagemHtml}
                             <h4 style="font-size: 16px; margin-bottom: 5px; color: var(--primary-blue); font-weight:bold;">${p.nome}</h4>
                             <p style="font-size: 13px; color: var(--gray-text); margin-bottom: 15px;">${p.categoria || 'Parceiro Local'}</p>
                             <div style="display: flex; justify-content: center; gap: 8px;">
