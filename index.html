@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -120,6 +121,119 @@
         .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
         .btn-enviar { background-color: var(--primary-blue); color: var(--white); border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; border-bottom: 3px solid var(--accent-gold); width: 100%; }
 
+        /* ── AGENDA DE SERVIÇOS PÚBLICOS ── */
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card-agenda {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid var(--primary-blue);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .card-agenda:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .card-agenda.categoria-saude     { border-left-color: #ef4444; }
+        .card-agenda.categoria-assistencia { border-left-color: #8b5cf6; }
+        .card-agenda.categoria-educacao  { border-left-color: #3b82f6; }
+        .card-agenda.categoria-transporte { border-left-color: #f59e0b; }
+        .card-agenda.categoria-outro     { border-left-color: var(--accent-gold); }
+
+        .agenda-badge-data {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--light-bg);
+            color: var(--primary-blue);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .agenda-badge-hoje {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .agenda-badge-amanha {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .agenda-badge-passado {
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+
+        .card-agenda h4 {
+            font-size: 17px;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .agenda-info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--gray-text);
+            margin-bottom: 6px;
+        }
+
+        .agenda-info-row i {
+            color: var(--primary-blue);
+            font-size: 14px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        .agenda-tag-categoria {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag-saude      { background: #fee2e2; color: #ef4444; }
+        .tag-assistencia { background: #ede9fe; color: #8b5cf6; }
+        .tag-educacao   { background: #dbeafe; color: #3b82f6; }
+        .tag-transporte { background: #fef3c7; color: #f59e0b; }
+        .tag-outro      { background: var(--gold-light); color: var(--primary-blue); }
+
+        .agenda-documentos {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: var(--light-bg);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--gray-text);
+        }
+
+        .agenda-documentos strong {
+            color: var(--primary-blue);
+            display: block;
+            margin-bottom: 2px;
+        }
+
         /* ── CONTADOR PÚBLICO ── */
         .contador-bar {
             background: var(--primary-blue);
@@ -180,6 +294,7 @@
                 <li><a href="#inicio">Início</a></li>
                 <li><a href="#oportunidades">Oportunidades</a></li>
                 <li><a href="#parceiros">Parceiros</a></li>
+                <li><a href="#agenda">Agenda CRAS</a></li>
                 <li><a href="#utilidade">Mural</a></li>
                 <li><a href="#comunidade">Comunidade</a></li>
             </ul>
@@ -214,6 +329,18 @@
             <div id="parceiros-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
                 <div class="skeleton-card" style="max-width:250px;padding:20px;text-align:center;border-radius:12px;width:100%;margin:0 auto;"><div class="skeleton-line" style="width:100px;height:100px;border-radius:50%;margin:0 auto 15px;"></div><div class="skeleton-line title" style="width:70%;margin:0 auto 10px;"></div><div class="skeleton-line short" style="width:40%;margin:0 auto 15px;"></div></div>
                 <div class="skeleton-card" style="max-width:250px;padding:20px;text-align:center;border-radius:12px;width:100%;margin:0 auto;"><div class="skeleton-line" style="width:100px;height:100px;border-radius:50%;margin:0 auto 15px;"></div><div class="skeleton-line title" style="width:70%;margin:0 auto 10px;"></div><div class="skeleton-line short" style="width:40%;margin:0 auto 15px;"></div></div>
+            </div>
+        </section>
+
+        <!-- AGENDA DE SERVIÇOS PÚBLICOS -->
+        <section id="agenda" style="margin-bottom: 60px;">
+            <h3 class="section-title">Agenda de Serviços Públicos</h3>
+            <p style="color: var(--gray-text); font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
+                Fique por dentro dos próximos atendimentos do CRAS Volante e outros serviços públicos no bairro.
+                Informações atualizadas diretamente pelo Lourival Sampaio.
+            </p>
+            <div class="agenda-grid" id="agenda-container">
+                <p>Carregando agenda...</p>
             </div>
         </section>
 
@@ -337,7 +464,8 @@
             imoveis:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1582713778&output=csv',
             vagas:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
             podcast:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv',
-            parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv'
+            parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv',
+            agenda:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1745040321&output=csv'
         };
 
         let baseImoveis = [];
@@ -517,7 +645,100 @@
             });
         }
 
+        async function carregarModuloAgenda() {
+            const container = document.getElementById('agenda-container');
+            try {
+                const res   = await fetch(LINKS_SHEETS.agenda);
+                const csv   = await res.text();
+                const lista = converterCsvParaJson(csv);
+                if (!container) return;
+                container.innerHTML = '';
+
+                const ativos = lista.filter(a => a.status && a.status.toLowerCase().trim() === 'ativo');
+
+                if (ativos.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="empty-icon">📅</div>
+                            <p><strong>Nenhum serviço agendado no momento.</strong></p>
+                            <small>Em breve novos atendimentos serão divulgados aqui.</small>
+                        </div>`;
+                    return;
+                }
+
+                // Ordena por data mais próxima
+                ativos.sort((a, b) => {
+                    const [da, ma, ya] = a.data.split('/');
+                    const [db, mb, yb] = b.data.split('/');
+                    return new Date(`${ya}-${ma}-${da}`) - new Date(`${yb}-${mb}-${db}`);
+                });
+
+                const hoje     = new Date();
+                const amanha   = new Date(); amanha.setDate(hoje.getDate() + 1);
+                const fmtData  = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+                const hojeFmt  = fmtData(hoje);
+                const amanhaFmt= fmtData(amanha);
+
+                // Ícone por categoria
+                const icones = {
+                    saude:       '🏥',
+                    assistencia: '🤝',
+                    educacao:    '📚',
+                    transporte:  '🚌',
+                    outro:       '📋'
+                };
+
+                ativos.forEach(item => {
+                    const cat = (item.categoria || 'outro').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+                    const icone = icones[cat] || '📋';
+
+                    // Badge de data
+                    let badgeClass = '', badgeTexto = '';
+                    const [d, m, y] = item.data.split('/');
+                    const dataItem  = new Date(`${y}-${m}-${d}`);
+                    const diffDias  = Math.round((dataItem - hoje) / (1000*60*60*24));
+
+                    if (item.data === hojeFmt) {
+                        badgeClass = 'agenda-badge-hoje';
+                        badgeTexto = 'Hoje';
+                    } else if (item.data === amanhaFmt) {
+                        badgeClass = 'agenda-badge-amanha';
+                        badgeTexto = 'Amanhã';
+                    } else if (diffDias < 0) {
+                        badgeClass = 'agenda-badge-passado';
+                        badgeTexto = 'Encerrado';
+                    } else {
+                        badgeTexto = `Em ${diffDias} dia${diffDias > 1 ? 's' : ''}`;
+                    }
+
+                    const docHtml = item.documentos
+                        ? `<div class="agenda-documentos"><strong>Documentos necessários:</strong>${item.documentos}</div>`
+                        : '';
+
+                    container.innerHTML += `
+                        <div class="card-agenda categoria-${cat}">
+                            <span class="agenda-tag-categoria tag-${cat}">${icone} ${item.categoria || 'Geral'}</span>
+                            <div class="agenda-badge-data ${badgeClass}">📅 ${item.data} — ${badgeTexto}</div>
+                            <h4>${item.servico}</h4>
+                            ${item.horario ? `<div class="agenda-info-row"><i class="bi bi-clock"></i><span>${item.horario}</span></div>` : ''}
+                            ${item.local   ? `<div class="agenda-info-row"><i class="bi bi-geo-alt"></i><span>${item.local}</span></div>` : ''}
+                            ${item.observacao ? `<div class="agenda-info-row"><i class="bi bi-info-circle"></i><span>${item.observacao}</span></div>` : ''}
+                            ${docHtml}
+                        </div>`;
+                });
+
+            } catch(e) {
+                console.error('Erro agenda:', e);
+                if (container) container.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="empty-icon">⚠️</div>
+                        <p>Erro ao carregar agenda. Tente novamente.</p>
+                    </div>`;
+            }
+        }
+
         window.onload = () => {
+            carregarModuloAgenda();
             carregarModuloImoveis();
             carregarModuloVagas();
             carregarModuloPodcast();
