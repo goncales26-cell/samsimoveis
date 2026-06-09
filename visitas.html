@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -16,7 +17,6 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
         body { background: var(--bg); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
 
-        /* ── TELA DE LOGIN ── */
         .login-wrap { background: var(--white); border-radius: 12px; padding: 40px; width: 100%; max-width: 380px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); text-align: center; }
         .login-wrap h1 { color: var(--primary); font-size: 22px; margin-bottom: 6px; }
         .login-wrap p { color: var(--gray); font-size: 14px; margin-bottom: 28px; }
@@ -27,7 +27,6 @@
         .logo-badge { width: 64px; height: 64px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 3px solid var(--gold); }
         .logo-badge span { color: var(--gold); font-size: 28px; font-weight: bold; }
 
-        /* ── PAINEL ── */
         .painel { display: none; width: 100%; max-width: 700px; padding: 20px; }
         .painel-header { background: var(--primary); border-radius: 12px; padding: 28px 32px; margin-bottom: 24px; border-bottom: 4px solid var(--gold); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
         .painel-header h1 { color: var(--white); font-size: 20px; }
@@ -40,23 +39,28 @@
         .stat-card .num { font-size: 2.8rem; font-weight: 800; color: var(--primary); line-height: 1; }
         .stat-card .lbl { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
 
-        .info-card { background: var(--white); border-radius: 10px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .info-card { background: var(--white); border-radius: 10px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 16px; }
         .info-card h3 { color: var(--primary); font-size: 15px; margin-bottom: 16px; border-bottom: 1px solid #f0f4f8; padding-bottom: 10px; }
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px; }
         .info-row:last-child { border-bottom: none; }
         .info-row span { color: var(--gray); }
         .info-row strong { color: var(--primary); }
         .badge-live { display: inline-flex; align-items: center; gap: 5px; background: #dcfce7; color: #16a34a; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .badge-live::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
+        .badge-live::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; display: inline-block; }
         @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 
-        .rodape-painel { text-align: center; margin-top: 20px; font-size: 12px; color: var(--gray); }
+        .btn-atualizar { width: 100%; background: var(--primary); color: var(--white); border: none; padding: 13px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border-bottom: 3px solid var(--gold); margin-bottom: 16px; transition: opacity 0.2s; }
+        .btn-atualizar:hover { opacity: 0.9; }
+
+        .rodape-painel { text-align: center; margin-top: 8px; font-size: 12px; color: var(--gray); }
         .btn-voltar { display: inline-block; margin-top: 10px; color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600; }
+
+        .loading { opacity: 0.4; font-size: 1.5rem !important; }
     </style>
 </head>
 <body>
 
-    <!-- TELA DE LOGIN -->
+    <!-- LOGIN -->
     <div class="login-wrap" id="login-wrap">
         <div class="logo-badge"><span>S</span></div>
         <h1>SAMS Imóveis</h1>
@@ -81,39 +85,40 @@
 
         <div class="cards-row">
             <div class="stat-card">
-                <div class="num" id="total-visitas">–</div>
+                <div class="num loading" id="total-visitas">...</div>
                 <div class="lbl">Total de Visitas</div>
             </div>
             <div class="stat-card">
-                <div class="num" id="visitas-hoje">–</div>
-                <div class="lbl">Hoje</div>
+                <div class="num loading" id="media-dia">...</div>
+                <div class="lbl">Média / Dia</div>
             </div>
             <div class="stat-card">
-                <div class="num" id="media-dia">–</div>
-                <div class="lbl">Média / dia</div>
+                <div class="num loading" id="dias-online">...</div>
+                <div class="lbl">Dias Online</div>
             </div>
         </div>
 
         <div class="info-card">
             <h3>Informações do Portal</h3>
             <div class="info-row"><span>Site</span><strong>lourivalsamsimoveis.com.br</strong></div>
-            <div class="info-row"><span>Contador iniciado em</span><strong id="data-inicio">–</strong></div>
+            <div class="info-row"><span>Contador iniciado em</span><strong>01/06/2026</strong></div>
             <div class="info-row"><span>Última atualização</span><strong id="ultima-atualizacao">–</strong></div>
             <div class="info-row"><span>Status</span><span class="badge-live">Online</span></div>
         </div>
 
+        <button class="btn-atualizar" onclick="carregarDados()">Atualizar dados agora</button>
+
         <div class="rodape-painel">
-            <p>Dados fornecidos por CountAPI · Atualizado em tempo real</p>
+            <p>Dados armazenados via JSONBin.io · Atualizado em tempo real</p>
             <a href="/" class="btn-voltar">← Voltar ao portal</a>
         </div>
     </div>
 
     <script>
-        // Senha do painel — altere aqui se necessário
         const SENHA_CORRETA = 'sams2026';
-
-        const NAMESPACE = 'samsimoveis-portal';
-        const KEY       = 'visitas';
+        const JSONBIN_ID    = '6a277020f5f4af5e29ced8c3';
+        const JSONBIN_KEY   = '$2a$10$2yAVUPnEfJqpdXdAqYS7buqV7ZbPwlkQbase9HR6QWGgYVttCMlH2';
+        const JSONBIN_URL   = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
         function entrar() {
             const digitada = document.getElementById('senha-input').value;
@@ -132,34 +137,53 @@
             document.getElementById('login-wrap').style.display = 'flex';
             document.getElementById('painel').style.display     = 'none';
             document.getElementById('senha-input').value = '';
+            document.getElementById('login-erro').style.display = 'none';
         }
 
-        function formatarNumero(n) { return Number(n).toLocaleString('pt-BR'); }
+        function formatarNumero(n) {
+            return Number(n).toLocaleString('pt-BR');
+        }
 
         async function carregarDados() {
+            // Mostra loading
+            ['total-visitas','media-dia','dias-online'].forEach(id => {
+                const el = document.getElementById(id);
+                el.textContent = '...';
+                el.classList.add('loading');
+            });
+
             try {
-                const res  = await fetch(`https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`);
+                const res  = await fetch(JSONBIN_URL + '/latest', {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
                 const data = await res.json();
-                const total = data.value || 0;
+                const total = data.record.visitas || 0;
 
-                document.getElementById('total-visitas').textContent = formatarNumero(total);
-
-                // Estima média diária (contador desde 01/06/2026)
                 const inicio   = new Date('2026-06-01');
                 const hoje     = new Date();
-                const diasTotal= Math.max(1, Math.round((hoje - inicio) / (1000*60*60*24)));
-                const media    = Math.round(total / diasTotal);
+                const dias     = Math.max(1, Math.round((hoje - inicio) / (1000*60*60*24)));
+                const media    = Math.round(total / dias);
 
-                document.getElementById('media-dia').textContent = formatarNumero(media);
-                document.getElementById('data-inicio').textContent = '01/06/2026';
-                document.getElementById('ultima-atualizacao').textContent = hoje.toLocaleString('pt-BR');
+                const setVal = (id, val) => {
+                    const el = document.getElementById(id);
+                    el.textContent = val;
+                    el.classList.remove('loading');
+                };
 
-                // Visitas de hoje: estimativa baseada na média
-                document.getElementById('visitas-hoje').textContent = formatarNumero(media);
+                setVal('total-visitas', formatarNumero(total));
+                setVal('media-dia',     formatarNumero(media));
+                setVal('dias-online',   formatarNumero(dias));
+
+                document.getElementById('ultima-atualizacao').textContent =
+                    hoje.toLocaleString('pt-BR');
 
             } catch(e) {
-                document.getElementById('total-visitas').textContent = 'Erro';
-                console.error(e);
+                ['total-visitas','media-dia','dias-online'].forEach(id => {
+                    const el = document.getElementById(id);
+                    el.textContent = 'Erro';
+                    el.classList.remove('loading');
+                });
+                console.error('Painel erro:', e);
             }
         }
     </script>
