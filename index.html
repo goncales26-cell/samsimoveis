@@ -289,28 +289,43 @@
 
     <script>
         // ═══════════════════════════════════════════
-        // CONTADOR DE VISITAS — CountAPI (gratuito)
-        // Namespace único do portal SAMS Imóveis
+        // CONTADOR DE VISITAS — JSONBin.io
         // ═══════════════════════════════════════════
-        const NAMESPACE = 'samsimoveis-portal';
-        const KEY       = 'visitas';
-        const API_HIT   = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`;
-        const API_GET   = `https://api.countapi.xyz/get/${NAMESPACE}/${KEY}`;
+        const JSONBIN_ID  = '6a277020f5f4af5e29ced8c3';
+        const JSONBIN_KEY = '$2a$10$2yAVUPnEfJqpdXdAqYS7buqV7ZbPwlkQbase9HR6QWGgYVttCMlH2';
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
         function formatarNumero(n) {
             return Number(n).toLocaleString('pt-BR');
         }
 
-        // Registra a visita e atualiza o contador público
         async function registrarVisita() {
             try {
-                const res  = await fetch(API_HIT);
-                const data = await res.json();
-                const el   = document.getElementById('contador-publico');
-                if (el) el.textContent = formatarNumero(data.value);
-            } catch (e) {
+                // 1. Lê o valor atual
+                const resGet = await fetch(JSONBIN_URL + '/latest', {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
+                const dataGet = await resGet.json();
+                const total   = (dataGet.record.visitas || 0) + 1;
+
+                // 2. Salva incrementado
+                await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_KEY
+                    },
+                    body: JSON.stringify({ visitas: total })
+                });
+
+                // 3. Atualiza o contador público
+                const el = document.getElementById('contador-publico');
+                if (el) el.textContent = formatarNumero(total);
+
+            } catch(e) {
                 const el = document.getElementById('contador-publico');
                 if (el) el.textContent = '–';
+                console.error('Contador:', e);
             }
         }
 
