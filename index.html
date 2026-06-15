@@ -234,6 +234,148 @@
             margin-bottom: 2px;
         }
 
+        /* ── TRANSPORTE / ÔNIBUS ── */
+        .transporte-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card-transporte {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-transporte:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .transporte-header {
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transporte-header .icone-onibus {
+            width: 40px; height: 40px;
+            background: var(--accent-gold);
+            color: var(--primary-blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .transporte-header h4 {
+            font-size: 16px;
+            line-height: 1.3;
+            margin-bottom: 2px;
+        }
+
+        .transporte-header small {
+            color: var(--accent-gold);
+            font-size: 12px;
+        }
+
+        .transporte-img-wrap {
+            position: relative;
+            cursor: zoom-in;
+            background: #f1f5f9;
+        }
+
+        .transporte-img-wrap img {
+            width: 100%;
+            display: block;
+            transition: opacity 0.3s;
+        }
+
+        .transporte-zoom-hint {
+            position: absolute;
+            bottom: 12px; right: 12px;
+            background: rgba(10,31,62,0.85);
+            color: var(--white);
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+        }
+
+        .transporte-footer {
+            padding: 12px 20px;
+            font-size: 12px;
+            color: var(--gray-text);
+            border-top: 1px solid #f0f4f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .transporte-footer .atualizado {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .aviso-transporte {
+            background: var(--gold-light);
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .aviso-transporte i { font-size: 18px; flex-shrink: 0; }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            cursor: zoom-out;
+        }
+        .lightbox.aberto { display: flex; }
+        .lightbox img {
+            max-width: 100%;
+            max-height: 92vh;
+            border-radius: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+        .lightbox-fechar {
+            position: absolute;
+            top: 20px; right: 24px;
+            color: var(--white);
+            font-size: 36px;
+            cursor: pointer;
+            line-height: 1;
+            background: none;
+            border: none;
+        }
+
         /* ── CONTADOR PÚBLICO ── */
         .contador-bar {
             background: var(--primary-blue);
@@ -295,6 +437,7 @@
                 <li><a href="#oportunidades">Oportunidades</a></li>
                 <li><a href="#parceiros">Parceiros</a></li>
                 <li><a href="#agenda">Agenda CRAS</a></li>
+                <li><a href="#transporte">Ônibus</a></li>
                 <li><a href="#utilidade">Mural</a></li>
                 <li><a href="#comunidade">Comunidade</a></li>
             </ul>
@@ -346,6 +489,19 @@
             </div>
         </section>
 
+        <!-- HORÁRIOS DE ÔNIBUS -->
+        <section id="transporte" style="margin-bottom: 60px;">
+            <h3 class="section-title">Horários de Ônibus</h3>
+            <div class="aviso-transporte">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>Horários sujeitos a alteração pela empresa de transporte. Recomendamos confirmar na rodoviária ou com o motorista antes de viajar.</span>
+            </div>
+            <div class="transporte-grid" id="transporte-container">
+                <div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-body"><div class="skeleton-line title"></div><div class="skeleton-line short"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-body"><div class="skeleton-line title"></div><div class="skeleton-line short"></div></div></div>
+            </div>
+        </section>
+
         <section id="utilidade" style="margin-bottom: 60px;">
             <h3 class="section-title">Utilidade Pública & Empregos</h3>
             <div class="utilidade-row">
@@ -388,6 +544,12 @@
                 </div>
             </div>
         </section>
+    </div>
+
+    <!-- LIGHTBOX para ampliar horários -->
+    <div class="lightbox" id="lightbox" onclick="fecharLightbox()">
+        <button class="lightbox-fechar" onclick="fecharLightbox()" aria-label="Fechar">&times;</button>
+        <img id="lightbox-img" src="" alt="Horário ampliado">
     </div>
 
     <!-- CONTADOR PÚBLICO -->
@@ -467,7 +629,8 @@
             vagas:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
             podcast:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv',
             parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv',
-            agenda:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1745040321&output=csv'
+            agenda:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1745040321&output=csv',
+            transporte:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=700513410&output=csv'
         };
 
         let baseImoveis = [];
@@ -739,7 +902,79 @@
             }
         }
 
+        async function carregarModuloTransporte() {
+            const container = document.getElementById('transporte-container');
+            if (!container) return;
+            try {
+                const res   = await fetch(LINKS_SHEETS.transporte);
+                const csv   = await res.text();
+                const lista = converterCsvParaJson(csv);
+                container.innerHTML = '';
+
+                const ativos = lista.filter(t => statusDisponivel(t.status));
+
+                if (ativos.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="empty-icon">🚌</div>
+                            <p><strong>Nenhum horário de ônibus disponível no momento.</strong></p>
+                            <small>Em breve as linhas da região serão divulgadas aqui.</small>
+                        </div>`;
+                    return;
+                }
+
+                ativos.forEach(item => {
+                    let urlImg = '';
+                    if (item.imagem_url && item.imagem_url.startsWith('http')) urlImg = item.imagem_url;
+                    else if (item.imagem_url) urlImg = `https://res.cloudinary.com/samsimoveis/image/upload/f_auto,q_auto/${item.imagem_url}`;
+
+                    if (!urlImg) return;
+
+                    const atualizado = item.atualizado_em
+                        ? `<span class="atualizado"><i class="bi bi-calendar-check"></i> Atualizado em ${item.atualizado_em}</span>`
+                        : '';
+                    const empresa = item.empresa ? `<span>${item.empresa}</span>` : '';
+
+                    container.innerHTML += `
+                        <div class="card-transporte">
+                            <div class="transporte-header">
+                                <div class="icone-onibus"><i class="bi bi-bus-front"></i></div>
+                                <div>
+                                    <h4>${item.linha || 'Linha de Ônibus'}</h4>
+                                    ${item.sentido ? `<small>${item.sentido}</small>` : ''}
+                                </div>
+                            </div>
+                            <div class="transporte-img-wrap" onclick="abrirLightbox('${urlImg}')">
+                                <img src="${urlImg}" alt="Horários da linha ${item.linha || ''}" loading="lazy">
+                                <div class="transporte-zoom-hint"><i class="bi bi-zoom-in"></i> Toque para ampliar</div>
+                            </div>
+                            ${(atualizado || empresa) ? `<div class="transporte-footer">${atualizado}${empresa}</div>` : ''}
+                        </div>`;
+                });
+
+            } catch(e) {
+                console.error('Erro transporte:', e);
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="empty-icon">⚠️</div>
+                        <p>Erro ao carregar horários de ônibus.</p>
+                    </div>`;
+            }
+        }
+
+        // Lightbox para ampliar imagem
+        function abrirLightbox(url) {
+            const lb  = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = url;
+            lb.classList.add('aberto');
+        }
+        function fecharLightbox() {
+            document.getElementById('lightbox').classList.remove('aberto');
+        }
+
         window.onload = () => {
+            carregarModuloTransporte();
             carregarModuloAgenda();
             carregarModuloImoveis();
             carregarModuloVagas();
