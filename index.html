@@ -685,7 +685,7 @@
                 return true;
             });
             if (filtrados.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p><strong>Nenhum imóvel desse tipo encontrado no momento.</strong></p><small>Entre em contato pelo WhatsApp para consultar oportunidades exclusivas.</small><br><br><a href="https://wa.me/5515981793811" style="display:inline-block;background:var(--success-green);color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;margin-top:10px;">Falar com o Corretor</a></div>`;
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="bi bi-search"></i></div><p><strong>Nenhum imóvel desse tipo encontrado no momento.</strong></p><small>Entre em contato pelo WhatsApp para consultar oportunidades exclusivas.</small><br><br><a href="https://wa.me/5515981793811" style="display:inline-block;background:var(--success-green);color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;margin-top:10px;">Falar com o Corretor</a></div>`;
                 return;
             }
             filtrados.forEach(imovel => {
@@ -707,12 +707,12 @@
                         </div>
                         <div class="card-body">
                             <h4>${imovel.titulo}</h4>
-                            <span class="badge-bairro">📍 ${bairro}</span>
+                            <span class="badge-bairro"><i class="bi bi-geo-alt-fill"></i> ${bairro}</span>
                             <div class="detalhes-tecnicos">${especificacoes}</div>
                             ${financiamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
                             <p style="font-size:14px;color:var(--gray-text);margin-bottom:15px;line-height:1.4;">${imovel.descricao}</p>
                             <div class="card-price">${imovel.preco}</div>
-                            <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Tenho+interesse+no+imóvel:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})" class="btn-whatsapp" target="_blank" aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp">💬 Falar sobre este imóvel</a>
+                            <a href="https://wa.me/5515981793811?text=Olá+Lourival!+Tenho+interesse+no+imóvel:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})" class="btn-whatsapp" target="_blank" aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp"><i class=\"bi bi-whatsapp\"></i> Falar sobre este imóvel</a>
                         </div>
                     </div>`;
             });
@@ -728,7 +728,7 @@
                 renderizarVitrine('todos');
             } catch(e) {
                 console.error(e);
-                if (container) container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro ao carregar imóveis.</p></div>`;
+                if (container) container.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="bi bi-exclamation-triangle-fill"></i></div><p>Erro ao carregar imóveis.</p></div>`;
             }
         }
 
@@ -824,7 +824,7 @@
                 if (ativos.length === 0) {
                     container.innerHTML = `
                         <div class="empty-state" style="grid-column:1/-1;">
-                            <div class="empty-icon">📅</div>
+                            <div class="empty-icon"><i class="bi bi-calendar-event"></i></div>
                             <p><strong>Nenhum serviço agendado no momento.</strong></p>
                             <small>Em breve novos atendimentos serão divulgados aqui.</small>
                         </div>`;
@@ -846,16 +846,16 @@
 
                 // Ícone por categoria
                 const icones = {
-                    saude:       '🏥',
-                    assistencia: '🤝',
-                    educacao:    '📚',
-                    transporte:  '🚌',
-                    outro:       '📋'
+                    saude:       '<i class="bi bi-heart-pulse-fill"></i>',
+                    assistencia: '<i class="bi bi-people-fill"></i>',
+                    educacao:    '<i class="bi bi-book-fill"></i>',
+                    transporte:  '<i class="bi bi-bus-front-fill"></i>',
+                    outro:       '<i class="bi bi-clipboard2-fill"></i>'
                 };
 
                 ativos.forEach(item => {
                     const cat = (item.categoria || 'outro').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-                    const icone = icones[cat] || '📋';
+                    const icone = icones[cat] || '<i class="bi bi-clipboard2-fill"></i>';
 
                     // Badge de data
                     let badgeClass = '', badgeTexto = '';
@@ -883,7 +883,7 @@
                     container.innerHTML += `
                         <div class="card-agenda categoria-${cat}">
                             <span class="agenda-tag-categoria tag-${cat}">${icone} ${item.categoria || 'Geral'}</span>
-                            <div class="agenda-badge-data ${badgeClass}">📅 ${item.data} — ${badgeTexto}</div>
+                            <div class="agenda-badge-data ${badgeClass}"><i class=\"bi bi-calendar-event\"></i> ${item.data} — ${badgeTexto}</div>
                             <h4>${item.servico}</h4>
                             ${item.horario ? `<div class="agenda-info-row"><i class="bi bi-clock"></i><span>${item.horario}</span></div>` : ''}
                             ${item.local   ? `<div class="agenda-info-row"><i class="bi bi-geo-alt"></i><span>${item.local}</span></div>` : ''}
@@ -896,7 +896,7 @@
                 console.error('Erro agenda:', e);
                 if (container) container.innerHTML = `
                     <div class="empty-state" style="grid-column:1/-1;">
-                        <div class="empty-icon">⚠️</div>
+                        <div class="empty-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
                         <p>Erro ao carregar agenda. Tente novamente.</p>
                     </div>`;
             }
@@ -916,7 +916,7 @@
                 if (ativos.length === 0) {
                     container.innerHTML = `
                         <div class="empty-state" style="grid-column:1/-1;">
-                            <div class="empty-icon">🚌</div>
+                            <div class="empty-icon"><i class="bi bi-bus-front"></i></div>
                             <p><strong>Nenhum horário de ônibus disponível no momento.</strong></p>
                             <small>Em breve as linhas da região serão divulgadas aqui.</small>
                         </div>`;
@@ -956,7 +956,7 @@
                 console.error('Erro transporte:', e);
                 container.innerHTML = `
                     <div class="empty-state" style="grid-column:1/-1;">
-                        <div class="empty-icon">⚠️</div>
+                        <div class="empty-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
                         <p>Erro ao carregar horários de ônibus.</p>
                     </div>`;
             }
