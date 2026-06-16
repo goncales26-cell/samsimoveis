@@ -88,7 +88,7 @@
         .btn-filtro.active { background: var(--primary-blue); color: var(--accent-gold); border-color: var(--primary-blue); }
 
         .filtros-transacao { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
-        .btn-transacao { background: var(--white); color: var(--primary-blue); border: 2px solid var(--primary-blue); padding: 10px 28px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 15px; }
+        .btn-transacao { background: var(--white); color: var(--primary-blue); border: 2px solid var(--primary-blue); padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 14px; }
         .btn-transacao:hover { background: var(--gold-light); }
         .btn-transacao.active { background: var(--primary-blue); color: var(--accent-gold); }
 
@@ -98,6 +98,7 @@
         .badge-transacao { position: absolute; top: 12px; left: 12px; z-index: 5; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.03em; }
         .badge-transacao.venda { background: var(--primary-blue); color: var(--accent-gold); }
         .badge-transacao.aluguel { background: var(--accent-gold); color: var(--primary-blue); }
+        .badge-transacao.locacao_compra { background: var(--success-green); color: var(--white); }
         .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; overflow: hidden; }
         .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
         .card-body { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
@@ -210,6 +211,7 @@
                 <button class="btn-transacao active" data-transacao="todos">Todos</button>
                 <button class="btn-transacao" data-transacao="venda">Venda</button>
                 <button class="btn-transacao" data-transacao="aluguel">Aluguel</button>
+                <button class="btn-transacao" data-transacao="locacao_compra">Locação c/ Opção de Compra</button>
             </div>
 
             <div class="filtros-container">
@@ -368,6 +370,8 @@
         function normalizarTransacao(valor) {
             if (!valor) return 'venda'; // padrão: se não informado, trata como venda
             const v = valor.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+            // Verifica primeiro a categoria mais específica (locação com opção de compra)
+            if ((v.includes('locacao') || v.includes('aluguel')) && (v.includes('compra') || v.includes('opcao'))) return 'locacao_compra';
             if (v.includes('aluguel') || v.includes('locacao') || v === 'alugar') return 'aluguel';
             return 'venda';
         }
@@ -400,17 +404,22 @@
                 const quartos       = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
                 const vagas         = imovel.vagas   && imovel.vagas   !== '0' && imovel.vagas   !== '-' ? `${imovel.vagas} Vaga(s)`  : '';
                 const financiamento = imovel.financiamento || '';
-                const isAluguel     = imovel._transacao === 'aluguel';
                 let especificacoes  = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
                 if (quartos || vagas) especificacoes += `<br>${[quartos,vagas].filter(Boolean).join(' | ')}`;
 
-                const tituloMsgWhatsapp = isAluguel
-                    ? `Olá+Lourival!+Tenho+interesse+no+aluguel+do+imóvel:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})`
-                    : `Olá+Lourival!+Tenho+interesse+no+imóvel:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})`;
+                // Configuração por tipo de transação: rótulo, texto de preço, mensagem de WhatsApp e exibição de financiamento
+                const CONFIG_TRANSACAO = {
+                    venda:          { rotulo: 'Venda',                          sufixoPreco: '',            mostraFinanciamento: true,  textoWhats: 'Tenho+interesse+no+imóvel' },
+                    aluguel:        { rotulo: 'Aluguel',                        sufixoPreco: 'por mês',     mostraFinanciamento: false, textoWhats: 'Tenho+interesse+no+aluguel+do+imóvel' },
+                    locacao_compra: { rotulo: 'Locação c/ Opção de Compra',     sufixoPreco: 'por mês',     mostraFinanciamento: false, textoWhats: 'Tenho+interesse+na+locação+com+opção+de+compra+do+imóvel' }
+                };
+                const cfg = CONFIG_TRANSACAO[imovel._transacao] || CONFIG_TRANSACAO.venda;
+
+                const tituloMsgWhatsapp = `Olá+Lourival!+${cfg.textoWhats}:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})`;
 
                 container.innerHTML += `
                     <div class="card-imovel">
-                        <span class="badge-transacao ${isAluguel ? 'aluguel' : 'venda'}">${isAluguel ? 'Aluguel' : 'Venda'}</span>
+                        <span class="badge-transacao ${imovel._transacao}">${cfg.rotulo}</span>
                         <div class="video-wrapper">
                             <video controls preload="metadata" title="Vídeo do imóvel: ${imovel.titulo}" aria-label="Vídeo de apresentação: ${imovel.titulo}" ${posterUrl ? `poster="${posterUrl}"` : ''}>
                                 <source src="${urlVideo || ''}" type="video/mp4">
@@ -420,9 +429,9 @@
                             <h4>${imovel.titulo}</h4>
                             <span class="badge-bairro">📍 ${bairro}</span>
                             <div class="detalhes-tecnicos">${especificacoes}</div>
-                            ${financiamento && !isAluguel ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
+                            ${financiamento && cfg.mostraFinanciamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
                             <p style="font-size:14px;color:var(--gray-text);margin-bottom:15px;line-height:1.4;">${imovel.descricao}</p>
-                            <div class="card-price">${imovel.preco}${isAluguel ? '<small>por mês</small>' : ''}</div>
+                            <div class="card-price">${imovel.preco}${cfg.sufixoPreco ? `<small>${cfg.sufixoPreco}</small>` : ''}</div>
                             <a href="https://wa.me/5515981793811?text=${tituloMsgWhatsapp}" class="btn-whatsapp" target="_blank" aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp">💬 Falar sobre este imóvel</a>
                         </div>
                     </div>`;
