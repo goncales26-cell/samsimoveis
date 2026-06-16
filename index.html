@@ -82,15 +82,15 @@
         .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
         .section-title { font-size: 28px; color: var(--primary-blue); margin-bottom: 30px; border-left: 6px solid var(--accent-gold); padding-left: 15px; text-transform: uppercase; }
 
-        .filtros-container { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
-        .btn-filtro { background: var(--white); color: var(--primary-blue); border: 1px solid #cbd5e1; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
-        .btn-filtro:hover { background: var(--light-bg); }
-        .btn-filtro.active { background: var(--primary-blue); color: var(--accent-gold); border-color: var(--primary-blue); }
-
         .filtros-transacao { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
         .btn-transacao { background: var(--white); color: var(--primary-blue); border: 2px solid var(--primary-blue); padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 14px; }
         .btn-transacao:hover { background: var(--gold-light); }
         .btn-transacao.active { background: var(--primary-blue); color: var(--accent-gold); }
+
+        .filtros-container { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center; }
+        .btn-filtro { background: var(--white); color: var(--primary-blue); border: 1px solid #cbd5e1; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
+        .btn-filtro:hover { background: var(--light-bg); }
+        .btn-filtro.active { background: var(--primary-blue); color: var(--accent-gold); border-color: var(--primary-blue); }
 
         .grid-imoveis { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; justify-content: center; align-items: stretch; }
         .card-imovel { background: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; transition: transform 0.3s; width: 100%; max-width: 350px; margin: 0 auto; display: flex; flex-direction: column; height: 100%; position: relative; }
@@ -130,6 +130,261 @@
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
         .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
         .btn-enviar { background-color: var(--primary-blue); color: var(--white); border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; border-bottom: 3px solid var(--accent-gold); width: 100%; }
+
+        /* ── AGENDA DE SERVIÇOS PÚBLICOS ── */
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card-agenda {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid var(--primary-blue);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .card-agenda:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .card-agenda.categoria-saude     { border-left-color: #ef4444; }
+        .card-agenda.categoria-assistencia { border-left-color: #8b5cf6; }
+        .card-agenda.categoria-educacao  { border-left-color: #3b82f6; }
+        .card-agenda.categoria-transporte { border-left-color: #f59e0b; }
+        .card-agenda.categoria-outro     { border-left-color: var(--accent-gold); }
+
+        .agenda-badge-data {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--light-bg);
+            color: var(--primary-blue);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .agenda-badge-hoje {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .agenda-badge-amanha {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .agenda-badge-passado {
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+
+        .card-agenda h4 {
+            font-size: 17px;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .agenda-info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--gray-text);
+            margin-bottom: 6px;
+        }
+
+        .agenda-info-row i {
+            color: var(--primary-blue);
+            font-size: 14px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        .agenda-tag-categoria {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag-saude      { background: #fee2e2; color: #ef4444; }
+        .tag-assistencia { background: #ede9fe; color: #8b5cf6; }
+        .tag-educacao   { background: #dbeafe; color: #3b82f6; }
+        .tag-transporte { background: #fef3c7; color: #f59e0b; }
+        .tag-outro      { background: var(--gold-light); color: var(--primary-blue); }
+
+        .agenda-documentos {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: var(--light-bg);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--gray-text);
+        }
+
+        .agenda-documentos strong {
+            color: var(--primary-blue);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* ── TRANSPORTE / ÔNIBUS ── */
+        .transporte-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card-transporte {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-transporte:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .transporte-header {
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transporte-header .icone-onibus {
+            width: 40px; height: 40px;
+            background: var(--accent-gold);
+            color: var(--primary-blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .transporte-header h4 {
+            font-size: 16px;
+            line-height: 1.3;
+            margin-bottom: 2px;
+        }
+
+        .transporte-header small {
+            color: var(--accent-gold);
+            font-size: 12px;
+        }
+
+        .transporte-img-wrap {
+            position: relative;
+            cursor: zoom-in;
+            background: #f1f5f9;
+        }
+
+        .transporte-img-wrap img {
+            width: 100%;
+            display: block;
+            transition: opacity 0.3s;
+        }
+
+        .transporte-zoom-hint {
+            position: absolute;
+            bottom: 12px; right: 12px;
+            background: rgba(10,31,62,0.85);
+            color: var(--white);
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+        }
+
+        .transporte-footer {
+            padding: 12px 20px;
+            font-size: 12px;
+            color: var(--gray-text);
+            border-top: 1px solid #f0f4f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .transporte-footer .atualizado {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .aviso-transporte {
+            background: var(--gold-light);
+            border: 1px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .aviso-transporte i { font-size: 18px; flex-shrink: 0; }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            cursor: zoom-out;
+        }
+        .lightbox.aberto { display: flex; }
+        .lightbox img {
+            max-width: 100%;
+            max-height: 92vh;
+            border-radius: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+        .lightbox-fechar {
+            position: absolute;
+            top: 20px; right: 24px;
+            color: var(--white);
+            font-size: 36px;
+            cursor: pointer;
+            line-height: 1;
+            background: none;
+            border: none;
+        }
 
         /* ── CONTADOR PÚBLICO ── */
         .contador-bar {
@@ -191,6 +446,8 @@
                 <li><a href="#inicio">Início</a></li>
                 <li><a href="#oportunidades">Oportunidades</a></li>
                 <li><a href="#parceiros">Parceiros</a></li>
+                <li><a href="#agenda">Agenda CRAS</a></li>
+                <li><a href="#transporte">Ônibus</a></li>
                 <li><a href="#utilidade">Mural</a></li>
                 <li><a href="#comunidade">Comunidade</a></li>
             </ul>
@@ -236,6 +493,33 @@
             </div>
         </section>
 
+        <!-- AGENDA DE SERVIÇOS PÚBLICOS -->
+        <section id="agenda" style="margin-bottom: 60px;">
+            <h3 class="section-title">Agenda de Serviços Públicos</h3>
+            <p style="color: var(--gray-text); font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
+                Fique por dentro dos próximos atendimentos do CRAS Volante e outros serviços públicos no bairro.
+                Informações atualizadas diretamente pelo Lourival Sampaio.
+            </p>
+            <div class="agenda-grid" id="agenda-container">
+                <div class="skeleton-card"><div class="skeleton-body"><div class="skeleton-line short"></div><div class="skeleton-line title"></div><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-body"><div class="skeleton-line short"></div><div class="skeleton-line title"></div><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-body"><div class="skeleton-line short"></div><div class="skeleton-line title"></div><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+            </div>
+        </section>
+
+        <!-- HORÁRIOS DE ÔNIBUS -->
+        <section id="transporte" style="margin-bottom: 60px;">
+            <h3 class="section-title">Horários de Ônibus</h3>
+            <div class="aviso-transporte">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>Horários sujeitos a alteração pela empresa de transporte. Recomendamos confirmar na rodoviária ou com o motorista antes de viajar.</span>
+            </div>
+            <div class="transporte-grid" id="transporte-container">
+                <div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-body"><div class="skeleton-line title"></div><div class="skeleton-line short"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-video"></div><div class="skeleton-body"><div class="skeleton-line title"></div><div class="skeleton-line short"></div></div></div>
+            </div>
+        </section>
+
         <section id="utilidade" style="margin-bottom: 60px;">
             <h3 class="section-title">Utilidade Pública & Empregos</h3>
             <div class="utilidade-row">
@@ -247,10 +531,10 @@
                     <div class="box-info-util">
                         <h4>Guia de Serviços do Bairro</h4>
                         <ul>
-                            <li><strong>Posto de Saúde (Santa Rita):</strong> Rua Cânio de Godoy, s/n. <br>Tel: (19) 3491-1035</li>
+                            <li><strong>Posto de Saúde (Santa Rita):</strong> Rua Ênio de Godoy, s/n. <br>Tel: (19) 3491-1035</li>
                             <li><strong>CRAS Volante (Assistência Social):</strong> Rua Antônio Campos Bicudo, 231-A. <br>Tel: (19) 3491-1645</li>
                             <li><strong>Creche (EMEI Alcina S. Proença):</strong> Rua Dr. Rolando Bolsonaro, 80. <br>Tel: (19) 3494-0105</li>
-                            <li><strong>Escola (EMEIF Prof. Derly Andriotti):</strong> Rua Dr. Cânio de Godoy, s/n. <br>Tel: (19) 3494-0002</li>
+                            <li><strong>Escola (EMEIF Prof. Derly Andriotti):</strong> Rua Dr. Ênio de Godoy, s/n. <br>Tel: (19) 3494-0002</li>
                         </ul>
                     </div>
                 </div>
@@ -280,6 +564,12 @@
         </section>
     </div>
 
+    <!-- LIGHTBOX para ampliar horários -->
+    <div class="lightbox" id="lightbox" onclick="fecharLightbox()">
+        <button class="lightbox-fechar" onclick="fecharLightbox()" aria-label="Fechar">&times;</button>
+        <img id="lightbox-img" src="" alt="Horário ampliado">
+    </div>
+
     <!-- CONTADOR PÚBLICO -->
     <div class="contador-bar">
         <span>Visitas ao portal: <strong id="contador-publico">...</strong> pessoas já acessaram este portal</span>
@@ -294,12 +584,24 @@
     <footer>
         <p>&copy; 2026 SAMS Imóveis - Jardim Santa Rita de Cássia, Capivari/SP</p>
         <p style="font-size: 11px; color: var(--accent-gold); margin-top: 5px;">Desenvolvido por 65.611.420 FLAVIO GONCALES - Soluções em TI</p>
+        <div style="margin-top: 16px;">
+            <a href="/visitas.html" 
+               style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.1); padding: 7px 16px; border-radius: 20px; font-size: 11px; text-decoration: none; transition: all 0.3s; letter-spacing: 0.05em;"
+               onmouseover="this.style.color='var(--accent-gold)'; this.style.borderColor='var(--accent-gold)'; this.style.background='rgba(212,175,55,0.08)';"
+               onmouseout="this.style.color='rgba(255,255,255,0.35)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.background='rgba(255,255,255,0.06)';">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><circle cx="17.5" cy="17.5" r="3.5"/></svg>
+                Painel do Corretor
+            </a>
+        </div>
     </footer>
 
     <script>
-        const NAMESPACE = 'samsimoveis-portal';
-        const KEY       = 'visitas';
-        const API_HIT   = `https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`;
+        // ═══════════════════════════════════════════
+        // CONTADOR DE VISITAS — JSONBin.io
+        // ═══════════════════════════════════════════
+        const JSONBIN_ID  = '6a277020f5f4af5e29ced8c3';
+        const JSONBIN_KEY = '$2a$10$KogCUyZpjeqLdNIiztgC/ObHuWQFWwXJp9gxs91W2zc5T2qEU2frm';
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
         function formatarNumero(n) {
             return Number(n).toLocaleString('pt-BR');
@@ -307,23 +609,43 @@
 
         async function registrarVisita() {
             try {
-                const res  = await fetch(API_HIT);
-                const data = await res.json();
-                const el   = document.getElementById('contador-publico');
-                if (el) el.textContent = formatarNumero(data.value);
-            } catch (e) {
+                const resGet = await fetch(JSONBIN_URL + '/latest', {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
+                const dataGet = await resGet.json();
+                const total   = (dataGet.record.visitas || 0) + 1;
+
+                await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_KEY
+                    },
+                    body: JSON.stringify({ visitas: total })
+                });
+
+                const el = document.getElementById('contador-publico');
+                if (el) el.textContent = formatarNumero(total);
+
+            } catch(e) {
                 const el = document.getElementById('contador-publico');
                 if (el) el.textContent = '–';
+                console.error('Contador:', e);
             }
         }
 
         registrarVisita();
 
+        // ═══════════════════════════════════════════
+        // LINKS GOOGLE SHEETS
+        // ═══════════════════════════════════════════
         const LINKS_SHEETS = {
             imoveis:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1582713778&output=csv',
             vagas:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1362070842&output=csv',
             podcast:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv',
-            parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv'
+            parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv',
+            agenda:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1745040321&output=csv',
+            transporte:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=700513410&output=csv'
         };
 
         let baseImoveis = [];
@@ -368,9 +690,8 @@
         }
 
         function normalizarTransacao(valor) {
-            if (!valor) return 'venda'; // padrão: se não informado, trata como venda
+            if (!valor) return 'venda';
             const v = valor.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-            // Verifica primeiro a categoria mais específica (locação com opção de compra)
             if ((v.includes('locacao') || v.includes('aluguel')) && (v.includes('compra') || v.includes('opcao'))) return 'locacao_compra';
             if (v.includes('aluguel') || v.includes('locacao') || v === 'alugar') return 'aluguel';
             return 'venda';
@@ -392,29 +713,27 @@
             });
 
             if (filtrados.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p><strong>Nenhum imóvel encontrado com esse filtro no momento.</strong></p><small>Entre em contato pelo WhatsApp para consultar oportunidades exclusivas.</small><br><br><a href="https://wa.me/5515981793811" style="display:inline-block;background:var(--success-green);color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;margin-top:10px;">Falar com o Corretor</a></div>`;
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="bi bi-search"></i></div><p><strong>Nenhum imóvel encontrado com esse filtro no momento.</strong></p><small>Entre em contato pelo WhatsApp para consultar oportunidades exclusivas.</small><br><br><a href="https://wa.me/5515981793811" style="display:inline-block;background:var(--success-green);color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;margin-top:10px;">Falar com o Corretor</a></div>`;
                 return;
             }
 
             filtrados.forEach(imovel => {
                 let urlVideo = imovel.video_url;
                 if (urlVideo && !urlVideo.startsWith('http')) urlVideo = `https://res.cloudinary.com/samsimoveis/video/upload/f_auto,q_auto/${urlVideo}`;
-                const posterUrl     = imovel.poster_url || '';
-                const bairro        = imovel.bairro || 'Jardim Santa Rita';
-                const quartos       = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
-                const vagas         = imovel.vagas   && imovel.vagas   !== '0' && imovel.vagas   !== '-' ? `${imovel.vagas} Vaga(s)`  : '';
-                const financiamento = imovel.financiamento || '';
-                let especificacoes  = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
+                const posterUrl    = imovel.poster_url || '';
+                const bairro       = imovel.bairro || 'Jardim Santa Rita';
+                const quartos      = imovel.quartos && imovel.quartos !== '0' && imovel.quartos !== '-' ? `${imovel.quartos} Quartos` : '';
+                const vagas        = imovel.vagas   && imovel.vagas   !== '0' && imovel.vagas   !== '-' ? `${imovel.vagas} Vaga(s)`  : '';
+                const financiamento= imovel.financiamento || '';
+                let especificacoes = `<strong>Tipo:</strong> ${imovel.tipo} | <strong>Área:</strong> ${imovel.metragem}`;
                 if (quartos || vagas) especificacoes += `<br>${[quartos,vagas].filter(Boolean).join(' | ')}`;
 
-                // Configuração por tipo de transação: rótulo, texto de preço, mensagem de WhatsApp e exibição de financiamento
                 const CONFIG_TRANSACAO = {
-                    venda:          { rotulo: 'Venda',                          sufixoPreco: '',            mostraFinanciamento: true,  textoWhats: 'Tenho+interesse+no+imóvel' },
-                    aluguel:        { rotulo: 'Aluguel',                        sufixoPreco: 'por mês',     mostraFinanciamento: false, textoWhats: 'Tenho+interesse+no+aluguel+do+imóvel' },
-                    locacao_compra: { rotulo: 'Locação c/ Opção de Compra',     sufixoPreco: 'por mês',     mostraFinanciamento: false, textoWhats: 'Tenho+interesse+na+locação+com+opção+de+compra+do+imóvel' }
+                    venda:          { rotulo: 'Venda',                      sufixoPreco: '',        mostraFinanciamento: true,  textoWhats: 'Tenho+interesse+no+imóvel' },
+                    aluguel:        { rotulo: 'Aluguel',                    sufixoPreco: 'por mês',  mostraFinanciamento: false, textoWhats: 'Tenho+interesse+no+aluguel+do+imóvel' },
+                    locacao_compra: { rotulo: 'Locação c/ Opção de Compra', sufixoPreco: 'por mês',  mostraFinanciamento: false, textoWhats: 'Tenho+interesse+na+locação+com+opção+de+compra+do+imóvel' }
                 };
                 const cfg = CONFIG_TRANSACAO[imovel._transacao] || CONFIG_TRANSACAO.venda;
-
                 const tituloMsgWhatsapp = `Olá+Lourival!+${cfg.textoWhats}:+${encodeURIComponent(imovel.titulo)}+(ID+${imovel.id})`;
 
                 container.innerHTML += `
@@ -427,12 +746,12 @@
                         </div>
                         <div class="card-body">
                             <h4>${imovel.titulo}</h4>
-                            <span class="badge-bairro">📍 ${bairro}</span>
+                            <span class="badge-bairro"><i class="bi bi-geo-alt-fill"></i> ${bairro}</span>
                             <div class="detalhes-tecnicos">${especificacoes}</div>
                             ${financiamento && cfg.mostraFinanciamento ? `<div class="badge-financiamento">🏠 ${financiamento}</div>` : ''}
                             <p style="font-size:14px;color:var(--gray-text);margin-bottom:15px;line-height:1.4;">${imovel.descricao}</p>
                             <div class="card-price">${imovel.preco}${cfg.sufixoPreco ? `<small>${cfg.sufixoPreco}</small>` : ''}</div>
-                            <a href="https://wa.me/5515981793811?text=${tituloMsgWhatsapp}" class="btn-whatsapp" target="_blank" aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp">💬 Falar sobre este imóvel</a>
+                            <a href="https://wa.me/5515981793811?text=${tituloMsgWhatsapp}" class="btn-whatsapp" target="_blank" aria-label="Falar sobre o imóvel ${imovel.titulo} via WhatsApp"><i class="bi bi-whatsapp"></i> Falar sobre este imóvel</a>
                         </div>
                     </div>`;
             });
@@ -450,7 +769,7 @@
                 renderizarVitrine();
             } catch(e) {
                 console.error(e);
-                if (container) container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro ao carregar imóveis.</p></div>`;
+                if (container) container.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="bi bi-exclamation-triangle-fill"></i></div><p>Erro ao carregar imóveis.</p></div>`;
             }
         }
 
@@ -542,7 +861,168 @@
             });
         }
 
+        async function carregarModuloAgenda() {
+            const container = document.getElementById('agenda-container');
+            try {
+                const res   = await fetch(LINKS_SHEETS.agenda);
+                const csv   = await res.text();
+                const lista = converterCsvParaJson(csv);
+                if (!container) return;
+                container.innerHTML = '';
+
+                const ativos = lista.filter(a => a.status && a.status.toLowerCase().trim() === 'ativo');
+
+                if (ativos.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="empty-icon"><i class="bi bi-calendar-event"></i></div>
+                            <p><strong>Nenhum serviço agendado no momento.</strong></p>
+                            <small>Em breve novos atendimentos serão divulgados aqui.</small>
+                        </div>`;
+                    return;
+                }
+
+                ativos.sort((a, b) => {
+                    const [da, ma, ya] = a.data.split('/');
+                    const [db, mb, yb] = b.data.split('/');
+                    return new Date(`${ya}-${ma}-${da}`) - new Date(`${yb}-${mb}-${db}`);
+                });
+
+                const hoje     = new Date();
+                const amanha   = new Date(); amanha.setDate(hoje.getDate() + 1);
+                const fmtData  = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+                const hojeFmt  = fmtData(hoje);
+                const amanhaFmt= fmtData(amanha);
+
+                const icones = {
+                    saude:       '<i class="bi bi-heart-pulse-fill"></i>',
+                    assistencia: '<i class="bi bi-people-fill"></i>',
+                    educacao:    '<i class="bi bi-book-fill"></i>',
+                    transporte:  '<i class="bi bi-bus-front-fill"></i>',
+                    outro:       '<i class="bi bi-clipboard2-fill"></i>'
+                };
+
+                ativos.forEach(item => {
+                    const cat = (item.categoria || 'outro').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+                    const icone = icones[cat] || '<i class="bi bi-clipboard2-fill"></i>';
+
+                    let badgeClass = '', badgeTexto = '';
+                    const [d, m, y] = item.data.split('/');
+                    const dataItem  = new Date(`${y}-${m}-${d}`);
+                    const diffDias  = Math.round((dataItem - hoje) / (1000*60*60*24));
+
+                    if (item.data === hojeFmt) {
+                        badgeClass = 'agenda-badge-hoje';
+                        badgeTexto = 'Hoje';
+                    } else if (item.data === amanhaFmt) {
+                        badgeClass = 'agenda-badge-amanha';
+                        badgeTexto = 'Amanhã';
+                    } else if (diffDias < 0) {
+                        badgeClass = 'agenda-badge-passado';
+                        badgeTexto = 'Encerrado';
+                    } else {
+                        badgeTexto = `Em ${diffDias} dia${diffDias > 1 ? 's' : ''}`;
+                    }
+
+                    const docHtml = item.documentos
+                        ? `<div class="agenda-documentos"><strong>Documentos necessários:</strong>${item.documentos}</div>`
+                        : '';
+
+                    container.innerHTML += `
+                        <div class="card-agenda categoria-${cat}">
+                            <span class="agenda-tag-categoria tag-${cat}">${icone} ${item.categoria || 'Geral'}</span>
+                            <div class="agenda-badge-data ${badgeClass}"><i class="bi bi-calendar-event"></i> ${item.data} — ${badgeTexto}</div>
+                            <h4>${item.servico}</h4>
+                            ${item.horario ? `<div class="agenda-info-row"><i class="bi bi-clock"></i><span>${item.horario}</span></div>` : ''}
+                            ${item.local   ? `<div class="agenda-info-row"><i class="bi bi-geo-alt"></i><span>${item.local}</span></div>` : ''}
+                            ${item.observacao ? `<div class="agenda-info-row"><i class="bi bi-info-circle"></i><span>${item.observacao}</span></div>` : ''}
+                            ${docHtml}
+                        </div>`;
+                });
+
+            } catch(e) {
+                console.error('Erro agenda:', e);
+                if (container) container.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="empty-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                        <p>Erro ao carregar agenda. Tente novamente.</p>
+                    </div>`;
+            }
+        }
+
+        async function carregarModuloTransporte() {
+            const container = document.getElementById('transporte-container');
+            if (!container) return;
+            try {
+                const res   = await fetch(LINKS_SHEETS.transporte);
+                const csv   = await res.text();
+                const lista = converterCsvParaJson(csv);
+                container.innerHTML = '';
+
+                const ativos = lista.filter(t => statusDisponivel(t.status));
+
+                if (ativos.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="empty-icon"><i class="bi bi-bus-front"></i></div>
+                            <p><strong>Nenhum horário de ônibus disponível no momento.</strong></p>
+                            <small>Em breve as linhas da região serão divulgadas aqui.</small>
+                        </div>`;
+                    return;
+                }
+
+                ativos.forEach(item => {
+                    let urlImg = '';
+                    if (item.imagem_url && item.imagem_url.startsWith('http')) urlImg = item.imagem_url;
+                    else if (item.imagem_url) urlImg = `https://res.cloudinary.com/samsimoveis/image/upload/f_auto,q_auto/${item.imagem_url}`;
+
+                    if (!urlImg) return;
+
+                    const atualizado = item.atualizado_em
+                        ? `<span class="atualizado"><i class="bi bi-calendar-check"></i> Atualizado em ${item.atualizado_em}</span>`
+                        : '';
+                    const empresa = item.empresa ? `<span>${item.empresa}</span>` : '';
+
+                    container.innerHTML += `
+                        <div class="card-transporte">
+                            <div class="transporte-header">
+                                <div class="icone-onibus"><i class="bi bi-bus-front"></i></div>
+                                <div>
+                                    <h4>${item.linha || 'Linha de Ônibus'}</h4>
+                                    ${item.sentido ? `<small>${item.sentido}</small>` : ''}
+                                </div>
+                            </div>
+                            <div class="transporte-img-wrap" onclick="abrirLightbox('${urlImg}')">
+                                <img src="${urlImg}" alt="Horários da linha ${item.linha || ''}" loading="lazy">
+                                <div class="transporte-zoom-hint"><i class="bi bi-zoom-in"></i> Toque para ampliar</div>
+                            </div>
+                            ${(atualizado || empresa) ? `<div class="transporte-footer">${atualizado}${empresa}</div>` : ''}
+                        </div>`;
+                });
+
+            } catch(e) {
+                console.error('Erro transporte:', e);
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="empty-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                        <p>Erro ao carregar horários de ônibus.</p>
+                    </div>`;
+            }
+        }
+
+        function abrirLightbox(url) {
+            const lb  = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = url;
+            lb.classList.add('aberto');
+        }
+        function fecharLightbox() {
+            document.getElementById('lightbox').classList.remove('aberto');
+        }
+
         window.onload = () => {
+            carregarModuloTransporte();
+            carregarModuloAgenda();
             carregarModuloImoveis();
             carregarModuloVagas();
             carregarModuloPodcast();
