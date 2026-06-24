@@ -668,7 +668,7 @@
             parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv',
             agenda:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1745040321&output=csv',
             transporte:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=700513410&output=csv',
-            avisos:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1729375295&output=csv'
+            avisos:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1123894616&output=csv'
         };
 
         let baseImoveis = [];
@@ -1051,10 +1051,18 @@
                 const text = await res.text();
                 const rows = parseCSV(text);
 
-                // Colunas esperadas: titulo | texto | imagem_url | data | ativo
+                // Aceita variações de nome de coluna (com/sem acento, maiúsculo/minúsculo)
+                function col(row, ...nomes) {
+                    for (const n of nomes) {
+                        const chave = Object.keys(row).find(k => k.trim().toLowerCase() === n.toLowerCase());
+                        if (chave !== undefined) return (row[chave] || '').toString().trim();
+                    }
+                    return '';
+                }
+
                 const ativos = rows.filter(r => {
-                    const ativo = (r['ativo'] || r['Ativo'] || '').toString().toLowerCase().trim();
-                    return ativo === 'sim' || ativo === 'yes' || ativo === '1' || ativo === 'true' || ativo === 'ativo';
+                    const ativo = col(r, 'ativo', 'Ativo', 'ATIVO', 'active').toLowerCase();
+                    return ['sim', 'yes', '1', 'true', 'ativo', 'ativa'].includes(ativo);
                 });
 
                 if (ativos.length === 0) {
@@ -1063,23 +1071,25 @@
                 }
 
                 container.innerHTML = ativos.map(r => {
-                    const titulo    = (r['titulo']     || r['Titulo']     || r['Título']     || '').trim();
-                    const texto     = (r['texto']      || r['Texto']      || '').trim();
-                    const imagemUrl = (r['imagem_url'] || r['Imagem_url'] || r['imagem']     || '').trim();
-                    const data      = (r['data']       || r['Data']       || '').trim();
+                    const titulo    = col(r, 'titulo', 'título', 'title');
+                    const texto     = col(r, 'texto', 'text', 'descricao', 'descrição');
+                    const imagemUrl = col(r, 'imagem_url', 'imagem', 'image_url', 'image', 'foto', 'url');
+                    const data      = col(r, 'data', 'date', 'Data');
 
-                    const soImagem  = imagemUrl && !titulo && !texto;
+                    // Valida que imagem_url é uma URL real (começa com http)
+                    const urlValida = imagemUrl.startsWith('http');
+                    const soImagem  = urlValida && !titulo && !texto;
                     const temBody   = titulo || texto || data;
 
                     return `
                         <div class="aviso-card${soImagem ? ' so-imagem' : ''}">
-                            ${imagemUrl ? `<img src="${imagemUrl}" alt="${titulo || 'Aviso'}" loading="lazy"
+                            ${urlValida ? `<img src="${imagemUrl}" alt="${titulo || 'Aviso'}" loading="lazy"
                                 onerror="this.style.display='none'">` : ''}
                             ${temBody ? `
                             <div class="aviso-body">
-                                ${data ? `<div class="aviso-data"><i class="bi bi-calendar-event"></i> ${data}</div>` : ''}
-                                ${titulo ? `<div class="aviso-titulo">${titulo}</div>` : ''}
-                                ${texto  ? `<div class="aviso-texto">${texto}</div>`  : ''}
+                                ${data    ? `<div class="aviso-data"><i class="bi bi-calendar-event"></i> ${data}</div>` : ''}
+                                ${titulo  ? `<div class="aviso-titulo">${titulo}</div>` : ''}
+                                ${texto   ? `<div class="aviso-texto">${texto}</div>`  : ''}
                             </div>` : ''}
                         </div>`;
                 }).join('');
