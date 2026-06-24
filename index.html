@@ -1049,7 +1049,7 @@
             try {
                 const res  = await fetch(SHEETS.avisos);
                 const text = await res.text();
-                const rows = parseCSV(text);
+                const rows = converterCsvParaJson(text);
 
                 // Aceita variações de nome de coluna (com/sem acento, maiúsculo/minúsculo)
                 function col(row, ...nomes) {
@@ -1076,7 +1076,6 @@
                     const imagemUrl = col(r, 'imagem_url', 'imagem', 'image_url', 'image', 'foto', 'url');
                     const data      = col(r, 'data', 'date', 'Data');
 
-                    // Valida que imagem_url é uma URL real (começa com http)
                     const urlValida = imagemUrl.startsWith('http');
                     const soImagem  = urlValida && !titulo && !texto;
                     const temBody   = titulo || texto || data;
@@ -1095,6 +1094,7 @@
                 }).join('');
 
             } catch(e) {
+                console.error('Mural erro:', e);
                 container.innerHTML = '<p class="aviso-empty">Erro ao carregar avisos.</p>';
             }
         }
