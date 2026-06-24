@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -85,6 +84,18 @@
 
         .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
         .section-title { font-size: 28px; color: var(--primary-blue); margin-bottom: 30px; border-left: 6px solid var(--accent-gold); padding-left: 15px; text-transform: uppercase; }
+
+        /* ── MURAL DE AVISOS ── */
+        .mural-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .aviso-card { background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e8e8e8; transition: transform 0.3s, box-shadow 0.3s; }
+        .aviso-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,0.14); }
+        .aviso-card img { width: 100%; display: block; object-fit: cover; }
+        .aviso-card .aviso-body { padding: 18px 20px; }
+        .aviso-card .aviso-data { font-size: 0.75rem; color: var(--accent-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .aviso-card .aviso-titulo { font-size: 1.05rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 8px; line-height: 1.3; }
+        .aviso-card .aviso-texto { font-size: 0.88rem; color: #555; line-height: 1.6; }
+        .aviso-card.so-imagem .aviso-body { display: none; }
+        .aviso-empty { text-align: center; color: #999; padding: 40px 20px; font-size: 0.95rem; }
 
         .filtros-transacao { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
         .btn-transacao { background: var(--white); color: var(--primary-blue); border: 2px solid var(--primary-blue); padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 14px; }
@@ -524,6 +535,14 @@
             </div>
         </section>
 
+        <!-- ── MURAL DE AVISOS ── -->
+        <section id="mural" style="margin-bottom: 60px;">
+            <h3 class="section-title">📢 Mural de Avisos</h3>
+            <div class="mural-grid" id="mural-container">
+                <p style="color:#999; font-size:0.95rem;">Carregando avisos...</p>
+            </div>
+        </section>
+
         <section id="utilidade" style="margin-bottom: 60px;">
             <h3 class="section-title">Utilidade Pública & Empregos</h3>
             <div class="utilidade-row">
@@ -647,7 +666,8 @@
             podcast:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1005083688&output=csv',
             parceiros: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1250901754&output=csv',
             agenda:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=1745040321&output=csv',
-            transporte:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=700513410&output=csv'
+            transporte:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=700513410&output=csv',
+            avisos:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUyvMH25MmZE_eT5E05T-HYC2w5qcQvsytmRDcsE-eIUnhS5StRJPKYTmDxepW_SOJHD3So9oKZbJC/pub?gid=AVISOS_GID&output=csv'
         };
 
         let baseImoveis = [];
@@ -1022,6 +1042,52 @@
             document.getElementById('lightbox').classList.remove('aberto');
         }
 
+        // ── MURAL DE AVISOS ──
+        async function carregarMural() {
+            const container = document.getElementById('mural-container');
+            try {
+                const res  = await fetch(SHEETS.avisos);
+                const text = await res.text();
+                const rows = parseCSV(text);
+
+                // Colunas esperadas: titulo | texto | imagem_url | data | ativo
+                const ativos = rows.filter(r => {
+                    const ativo = (r['ativo'] || r['Ativo'] || '').toString().toLowerCase().trim();
+                    return ativo === 'sim' || ativo === 'yes' || ativo === '1' || ativo === 'true' || ativo === 'ativo';
+                });
+
+                if (ativos.length === 0) {
+                    container.innerHTML = '<p class="aviso-empty">Nenhum aviso no momento.</p>';
+                    return;
+                }
+
+                container.innerHTML = ativos.map(r => {
+                    const titulo    = (r['titulo']     || r['Titulo']     || r['Título']     || '').trim();
+                    const texto     = (r['texto']      || r['Texto']      || '').trim();
+                    const imagemUrl = (r['imagem_url'] || r['Imagem_url'] || r['imagem']     || '').trim();
+                    const data      = (r['data']       || r['Data']       || '').trim();
+
+                    const soImagem  = imagemUrl && !titulo && !texto;
+                    const temBody   = titulo || texto || data;
+
+                    return `
+                        <div class="aviso-card${soImagem ? ' so-imagem' : ''}">
+                            ${imagemUrl ? `<img src="${imagemUrl}" alt="${titulo || 'Aviso'}" loading="lazy"
+                                onerror="this.style.display='none'">` : ''}
+                            ${temBody ? `
+                            <div class="aviso-body">
+                                ${data ? `<div class="aviso-data"><i class="bi bi-calendar-event"></i> ${data}</div>` : ''}
+                                ${titulo ? `<div class="aviso-titulo">${titulo}</div>` : ''}
+                                ${texto  ? `<div class="aviso-texto">${texto}</div>`  : ''}
+                            </div>` : ''}
+                        </div>`;
+                }).join('');
+
+            } catch(e) {
+                container.innerHTML = '<p class="aviso-empty">Erro ao carregar avisos.</p>';
+            }
+        }
+
         window.onload = () => {
             carregarModuloTransporte();
             carregarModuloAgenda();
@@ -1029,6 +1095,7 @@
             carregarModuloVagas();
             carregarModuloPodcast();
             carregarModuloParceiros();
+            carregarMural();
         };
     </script>
 </body>
