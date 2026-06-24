@@ -1046,23 +1046,41 @@
         // ── MURAL DE AVISOS ──
         async function carregarMural() {
             const container = document.getElementById('mural-container');
+            if (!container) return;
             try {
-                const res  = await fetch(SHEETS.avisos);
+                const res = await fetch(LINKS_SHEETS.avisos);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
                 const text = await res.text();
-                const rows = converterCsvParaJson(text);
 
-                // Aceita variações de nome de coluna (com/sem acento, maiúsculo/minúsculo)
-                function col(row, ...nomes) {
-                    for (const n of nomes) {
-                        const chave = Object.keys(row).find(k => k.trim().toLowerCase() === n.toLowerCase());
-                        if (chave !== undefined) return (row[chave] || '').toString().trim();
+                // Parser CSV inline — independente de qualquer outra função
+                const linhas = text.split('\n').filter(l => l.trim() !== '');
+                if (linhas.length < 2) { container.innerHTML = '<p class="aviso-empty">Nenhum aviso no momento.</p>'; return; }
+
+                const sep = linhas[0].includes(';') ? ';' : ',';
+
+                function parseLinha(linha) {
+                    const campos = []; let cur = ''; let aspas = false;
+                    for (let i = 0; i < linha.length; i++) {
+                        const c = linha[i];
+                        if (c === '"') { if (aspas && linha[i+1] === '"') { cur += '"'; i++; } else aspas = !aspas; }
+                        else if (c === sep && !aspas) { campos.push(cur.trim().replace(/\r/g,'')); cur = ''; }
+                        else cur += c;
                     }
-                    return '';
+                    campos.push(cur.trim().replace(/\r/g,''));
+                    return campos;
                 }
 
+                const cabecalhos = parseLinha(linhas[0]).map(h => h.toLowerCase().trim().replace(/\r/g,''));
+                const rows = linhas.slice(1).map(l => {
+                    const vals = parseLinha(l);
+                    const obj = {};
+                    cabecalhos.forEach((h, i) => obj[h] = (vals[i] || '').replace(/\r/g,'').trim());
+                    return obj;
+                });
+
                 const ativos = rows.filter(r => {
-                    const ativo = col(r, 'ativo', 'Ativo', 'ATIVO', 'active').toLowerCase();
-                    return ['sim', 'yes', '1', 'true', 'ativo', 'ativa'].includes(ativo);
+                    const v = (r['ativo'] || '').toLowerCase().trim();
+                    return v === 'sim' || v === 'yes' || v === '1' || v === 'true';
                 });
 
                 if (ativos.length === 0) {
@@ -1071,31 +1089,28 @@
                 }
 
                 container.innerHTML = ativos.map(r => {
-                    const titulo    = col(r, 'titulo', 'título', 'title');
-                    const texto     = col(r, 'texto', 'text', 'descricao', 'descrição');
-                    const imagemUrl = col(r, 'imagem_url', 'imagem', 'image_url', 'image', 'foto', 'url');
-                    const data      = col(r, 'data', 'date', 'Data');
+                    const titulo    = (r['titulo']     || '').trim();
+                    const texto     = (r['texto']      || '').trim();
+                    const imagemUrl = (r['imagem_url'] || '').trim();
+                    const data      = (r['data']       || '').trim();
 
                     const urlValida = imagemUrl.startsWith('http');
                     const soImagem  = urlValida && !titulo && !texto;
                     const temBody   = titulo || texto || data;
 
-                    return `
-                        <div class="aviso-card${soImagem ? ' so-imagem' : ''}">
-                            ${urlValida ? `<img src="${imagemUrl}" alt="${titulo || 'Aviso'}" loading="lazy"
-                                onerror="this.style.display='none'">` : ''}
-                            ${temBody ? `
-                            <div class="aviso-body">
-                                ${data    ? `<div class="aviso-data"><i class="bi bi-calendar-event"></i> ${data}</div>` : ''}
-                                ${titulo  ? `<div class="aviso-titulo">${titulo}</div>` : ''}
-                                ${texto   ? `<div class="aviso-texto">${texto}</div>`  : ''}
-                            </div>` : ''}
-                        </div>`;
+                    return `<div class="aviso-card${soImagem ? ' so-imagem' : ''}">
+                        ${urlValida ? `<img src="${imagemUrl}" alt="${titulo || 'Aviso'}" loading="lazy" onerror="this.style.display='none'">` : ''}
+                        ${temBody ? `<div class="aviso-body">
+                            ${data   ? `<div class="aviso-data"><i class="bi bi-calendar-event"></i> ${data}</div>` : ''}
+                            ${titulo ? `<div class="aviso-titulo">${titulo}</div>` : ''}
+                            ${texto  ? `<div class="aviso-texto">${texto}</div>` : ''}
+                        </div>` : ''}
+                    </div>`;
                 }).join('');
 
             } catch(e) {
-                console.error('Mural erro:', e);
                 container.innerHTML = '<p class="aviso-empty">Erro ao carregar avisos.</p>';
+                console.error('Mural erro:', e);
             }
         }
 
